@@ -5,6 +5,7 @@ out
 kotlin-js-store
 
 # IntelliJ ignores
+.idea
 *.iml
 /*.ipr
 
@@ -21,6 +22,8 @@ kotlin-js-store
 /.idea/*.iml
 /.idea/modules
 /.idea/libraries-with-intellij-classes.xml
+
+local.properties
 
 # Gradle ignores
 .gradle
