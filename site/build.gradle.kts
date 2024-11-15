@@ -32,6 +32,7 @@ kotlin {
             implementation(libs.kobweb.core)
             implementation(libs.kobweb.silk)
             implementation(libs.silk.icons.fa)
+            implementation(libs.kotlinx.serialization)
             // implementation(libs.kobwebx.markdown)
             implementation(project(":worker"))
         }
@@ -39,8 +40,8 @@ kotlin {
             compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
             compileOnly(libs.kmongo.database)
             compileOnly(libs.kotlinx.serialization)
-            compileOnly(libs.kotlinx.coroutine.core)
-            compileOnly(libs.kotlinx.coroutine.reactive)
+            implementation(libs.kotlinx.coroutine.core)
+            implementation(libs.kotlinx.coroutine.reactive)
         }
     }
 }
