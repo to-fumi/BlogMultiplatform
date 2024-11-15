@@ -38,7 +38,7 @@ class MongoDB(
     private val database = mongoClient.getDatabase(DATABASE_NAME)
     private val userCollection = database.getCollection("users", User::class.java)
 
-    override suspend fun userCheckExistence(user: User): User? {
+    override suspend fun checkUserExistence(user: User): User? {
         return try {
             userCollection
                 .find(

@@ -11,3 +11,10 @@ data class User(
     val username: String = "",
     val password: String = "",
 )
+
+@Serializable
+data class UserWithoutPassword(
+    @SerialName(value = "_id")
+    val id: String = ObjectIdGenerator().generate().toString(),
+    val username: String = "",
+)
