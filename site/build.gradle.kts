@@ -38,10 +38,15 @@ kotlin {
         }
         jvmMain.dependencies {
             compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
-            compileOnly(libs.kmongo.database)
+            compileOnly(libs.kmongo.driver.database)
+            implementation(libs.kmongo.driver.core)
+            implementation(libs.kmongo.driver.sync)
             compileOnly(libs.kotlinx.serialization)
             implementation(libs.kotlinx.coroutine.core)
             implementation(libs.kotlinx.coroutine.reactive)
+            implementation(libs.kmongo.driver.reactivestreams)
+            implementation(libs.kmongo.slf4j.api)
+            implementation(libs.kmongo.slf4j.simple)
         }
     }
 }
