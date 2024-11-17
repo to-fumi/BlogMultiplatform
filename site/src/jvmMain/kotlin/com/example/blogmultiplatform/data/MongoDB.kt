@@ -10,7 +10,7 @@ import com.mongodb.reactivestreams.client.MongoClients
 import com.varabyte.kobweb.api.data.add
 import com.varabyte.kobweb.api.init.InitApi
 import com.varabyte.kobweb.api.init.InitApiContext
-import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactive.awaitFirst
 import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import org.bson.codecs.configuration.CodecRegistries.fromRegistries
 import org.bson.codecs.configuration.CodecRegistry
@@ -46,7 +46,7 @@ class MongoDB(
                         eq(User::username.name, user.username),
                         eq(User::password.name, user.password),
                     )
-                ).awaitFirstOrNull()
+                ).awaitFirst()
         } catch (e: Exception) {
             context.logger.error(e.message.toString())
             null

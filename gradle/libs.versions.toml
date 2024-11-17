@@ -24,7 +24,8 @@ kmongo-driver-core = { module = "org.mongodb:mongodb-driver-core", version.ref =
 kmongo-driver-sync = { module = "org.mongodb:mongodb-driver-sync", version.ref = "kmongo" }
 kmongo-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 kmongo-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine" }
 kotlinx-coroutine-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "coroutine" }
 
