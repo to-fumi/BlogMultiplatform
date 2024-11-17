@@ -16,6 +16,12 @@ kobweb {
         index {
             description.set("Powered by Kobweb")
         }
+        server {
+            remoteDebugging {
+                enabled.set(true)
+                port.set(5005)
+            }
+        }
     }
 }
 
@@ -32,7 +38,8 @@ kotlin {
             implementation(libs.kobweb.core)
             implementation(libs.kobweb.silk)
             implementation(libs.silk.icons.fa)
-            implementation(libs.kotlinx.serialization)
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
             // implementation(libs.kobwebx.markdown)
             implementation(project(":worker"))
         }
@@ -41,7 +48,8 @@ kotlin {
             compileOnly(libs.kmongo.driver.database)
             implementation(libs.kmongo.driver.core)
             implementation(libs.kmongo.driver.sync)
-            compileOnly(libs.kotlinx.serialization)
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutine.core)
             implementation(libs.kotlinx.coroutine.reactive)
             implementation(libs.kmongo.driver.reactivestreams)
