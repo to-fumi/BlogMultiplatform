@@ -26,3 +26,9 @@ Execute the command below to start mongod with dbpath.
 ```shell
 mongod --dbpath /usr/local/var/mongodb
 ```
+
+### logger
+
+```shell
+tail -f site/.kobweb/server/logs/kobweb-server.log 
+```
