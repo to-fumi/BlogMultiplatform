@@ -38,23 +38,15 @@ kotlin {
             implementation(libs.kobweb.core)
             implementation(libs.kobweb.silk)
             implementation(libs.silk.icons.fa)
-            implementation(libs.kotlinx.serialization.core)
-            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization)
             // implementation(libs.kobwebx.markdown)
             implementation(project(":worker"))
         }
         jvmMain.dependencies {
-            compileOnly(libs.kobweb.api) // Provided by Kobweb backend at runtime
-            compileOnly(libs.kmongo.driver.database)
-            implementation(libs.kmongo.driver.core)
-            implementation(libs.kmongo.driver.sync)
-            implementation(libs.kotlinx.serialization.core)
-            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kobweb.api) // Provided by Kobweb backend at runtime
+            implementation(libs.mongodb.kotlin.driver)
+            implementation(libs.kotlinx.serialization)
             implementation(libs.kotlinx.coroutine.core)
-            implementation(libs.kotlinx.coroutine.reactive)
-            implementation(libs.kmongo.driver.reactivestreams)
-            implementation(libs.kmongo.slf4j.api)
-            implementation(libs.kmongo.slf4j.simple)
         }
     }
 }
