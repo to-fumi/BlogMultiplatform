@@ -8,6 +8,7 @@ import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
 import com.example.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
 import com.example.blogmultiplatform.util.Id
 import com.example.blogmultiplatform.util.Res
+import com.example.blogmultiplatform.util.logout
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.dom.svg.Path
 import com.varabyte.kobweb.compose.dom.svg.Svg
@@ -70,26 +71,35 @@ fun SidePanel() {
             title = "Home",
             selected = context.route.path == (Screen.AdminHome.route),
             icon = Res.PathIcon.home,
-            onClick = {},
+            onClick = {
+                context.router.navigateTo(Screen.AdminHome.route)
+            },
         )
         NavigationItem(
             modifier = Modifier.margin(bottom = 24.px),
             title = "Create a Post",
             selected = context.route.path == (Screen.AdminCreate.route),
             icon = Res.PathIcon.create,
-            onClick = {},
+            onClick = {
+                context.router.navigateTo(Screen.AdminCreate.route)
+            },
         )
         NavigationItem(
             modifier = Modifier.margin(bottom = 24.px),
             title = "My Posts",
             selected = context.route.path == (Screen.AdminMyPosts.route),
             icon = Res.PathIcon.posts,
-            onClick = {},
+            onClick = {
+                context.router.navigateTo(Screen.AdminMyPosts.route)
+            },
         )
         NavigationItem(
             title = "Logout",
             icon = Res.PathIcon.logout,
-            onClick = {},
+            onClick = {
+                logout()
+                context.router.navigateTo(Screen.AdminLogin.route)
+            },
         )
     }
 }
