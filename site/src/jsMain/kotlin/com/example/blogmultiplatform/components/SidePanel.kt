@@ -2,9 +2,11 @@ package com.example.blogmultiplatform.components
 
 import androidx.compose.runtime.Composable
 import com.example.blogmultiplatform.models.Theme
+import com.example.blogmultiplatform.navigation.Screen
 import com.example.blogmultiplatform.styles.NavigationItemStyle
 import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
 import com.example.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
+import com.example.blogmultiplatform.util.Id
 import com.example.blogmultiplatform.util.Res
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.dom.svg.Path
@@ -29,6 +31,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.toModifier
@@ -39,6 +42,7 @@ import org.jetbrains.compose.web.dom.Th
 
 @Composable
 fun SidePanel() {
+    val context = rememberPageContext()
     Column(
         modifier = Modifier
             .padding(leftRight = 40.px, topBottom = 50.px)
@@ -64,19 +68,21 @@ fun SidePanel() {
         NavigationItem(
             modifier = Modifier.margin(bottom = 24.px),
             title = "Home",
-            selected = true,
+            selected = context.route.path == (Screen.AdminHome.route),
             icon = Res.PathIcon.home,
             onClick = {},
         )
         NavigationItem(
             modifier = Modifier.margin(bottom = 24.px),
             title = "Create a Post",
+            selected = context.route.path == (Screen.AdminCreate.route),
             icon = Res.PathIcon.create,
             onClick = {},
         )
         NavigationItem(
             modifier = Modifier.margin(bottom = 24.px),
             title = "My Posts",
+            selected = context.route.path == (Screen.AdminMyPosts.route),
             icon = Res.PathIcon.posts,
             onClick = {},
         )
@@ -111,7 +117,7 @@ fun NavigationItem(
         )
         SpanText(
             modifier = Modifier
-                .id("navigationText")
+                .id(Id.navigationText)
                 .fontFamily(FONT_FAMILY)
                 .fontSize(16.px)
                 .thenIf(
@@ -132,7 +138,7 @@ fun VectorIcon(
 ) {
     Svg(
         attrs = Modifier
-            .id("svgParent")
+            .id(Id.svgParent)
             .width(24.px)
             .height(24.px)
             .toAttrs {
@@ -142,7 +148,7 @@ fun VectorIcon(
     ) {
         Path(
             attrs = Modifier
-                .id("vectorIcon")
+                .id(Id.vectorIcon)
                 .thenIf(
                     condition = selected,
                     other = Modifier.styleModifier {
