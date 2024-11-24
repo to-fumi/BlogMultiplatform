@@ -1,6 +1,12 @@
 package com.example.blogmultiplatform.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import com.example.blogmultiplatform.models.Theme
 import com.example.blogmultiplatform.navigation.Screen
 import com.example.blogmultiplatform.styles.NavigationItemStyle
@@ -10,7 +16,11 @@ import com.example.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
 import com.example.blogmultiplatform.util.Id
 import com.example.blogmultiplatform.util.Res
 import com.example.blogmultiplatform.util.logout
+import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.ScrollBehavior
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.dom.svg.Path
 import com.varabyte.kobweb.compose.dom.svg.Svg
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -31,14 +41,18 @@ import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.id
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.opacity
+import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
+import com.varabyte.kobweb.compose.ui.modifiers.scrollBehavior
+import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.fa.FaBars
@@ -48,7 +62,10 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.Position
+import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
@@ -232,13 +249,40 @@ private fun CollapsedSidePanel(onMenuClick: () -> Unit) {
 
 @Composable
 fun OverflowSidePanel(onMenuClosed: () -> Unit) {
+    val scope = rememberCoroutineScope()
     val breakpoint = rememberBreakpoint()
+
+    var translateX by remember { mutableStateOf((-100).percent) }
+    var opacity by remember { mutableStateOf(0.percent) }
+
+    LaunchedEffect(key1 = breakpoint) {
+        translateX = 0.percent
+        opacity = 100.percent
+        if (breakpoint > Breakpoint.MD) {
+            scope.launch {
+                translateX = (-100).percent
+                opacity = 0.percent
+                delay(500)
+                onMenuClosed()
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.vh)
             .position(Position.Fixed)
             .zIndex(9)
+            .opacity(opacity)
+            .transition(
+                Transition.of(
+                    property = "opacity",
+                    duration = 300.ms,
+                    timingFunction = null,
+                    delay = null
+                )
+            )
             .backgroundColor(Theme.HalfBlack.rgb)
     ) {
         Column(
@@ -246,10 +290,21 @@ fun OverflowSidePanel(onMenuClosed: () -> Unit) {
                 .padding(all = 24.px)
                 .fillMaxHeight()
                 .width(if(breakpoint < Breakpoint.MD) 50.percent else 25.percent)
+                .translateX(translateX)
+                .transition(
+                    Transition.of(
+                        property = "translate",
+                        duration = 300.ms,
+                        timingFunction = null,
+                        delay = null
+                    )
+                )
+                .overflow(Overflow.Auto)
+                .scrollBehavior(ScrollBehavior.Smooth)
                 .backgroundColor(Theme.Secondary.rgb)
         ) {
             Row(
-                modifier = Modifier.margin(bottom = 60.px),
+                modifier = Modifier.margin(bottom = 60.px, top = 24.px),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 FaXmark(
@@ -258,7 +313,12 @@ fun OverflowSidePanel(onMenuClosed: () -> Unit) {
                         .color(Colors.White)
                         .cursor(Cursor.Pointer)
                         .onClick {
-                            onMenuClosed()
+                            scope.launch {
+                                translateX = (-100).percent
+                                opacity = 0.percent
+                                delay(500)
+                                onMenuClosed()
+                            }
                         }
                     ,
                     size = IconSize.LG,
