@@ -5,19 +5,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.example.blogmultiplatform.components.AdminPageLayout
+import com.example.blogmultiplatform.components.LoadingIndicator
 import com.example.blogmultiplatform.models.RandomJoke
 import com.example.blogmultiplatform.models.Theme
 import com.example.blogmultiplatform.navigation.Screen
 import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
-import com.example.blogmultiplatform.util.Constants.HUMOR_API_URL
 import com.example.blogmultiplatform.util.Constants.PAGE_WIDTH
 import com.example.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
 import com.example.blogmultiplatform.util.Res
+import com.example.blogmultiplatform.util.fetchRandomJoke
 import com.example.blogmultiplatform.util.isUserLoggedIn
-import com.varabyte.kobweb.browser.http.http
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -53,17 +52,10 @@ import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
-import kotlinx.browser.localStorage
-import kotlinx.browser.window
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
-import org.w3c.dom.get
-import org.w3c.dom.set
-import kotlin.js.Date
 
 @Page
 @Composable
@@ -75,45 +67,10 @@ fun HomePage() {
 
 @Composable
 fun HomeScreen() {
-    val scope = rememberCoroutineScope()
     var randomJoke: RandomJoke? by remember { mutableStateOf(null) }
 
     LaunchedEffect(Unit) {
-        val date = localStorage["date"]
-        if (date != null) {
-            val difference = (Date.now() - date.toDouble())
-            val dayHasPassed = difference >= 86400000
-            if(dayHasPassed) {
-                scope.launch {
-                    try {
-                        val result = window.http.get(HUMOR_API_URL).decodeToString()
-                        randomJoke = Json.decodeFromString<RandomJoke>(result)
-                        localStorage["date"] = Date.now().toString()
-                        localStorage["joke"] = result
-                    } catch (e: Exception) {
-                        println(e.message)
-                    }
-                }
-            } else {
-                try {
-                    randomJoke = localStorage["joke"]?.let { Json.decodeFromString<RandomJoke>(it) }
-                } catch (e: Exception) {
-                    randomJoke = RandomJoke(id = -1, joke = "Unexpected Error.")
-                    println(e.message)
-                }
-            }
-        } else {
-            scope.launch {
-                try {
-                    val result = window.http.get(HUMOR_API_URL).decodeToString()
-                    randomJoke = Json.decodeFromString<RandomJoke>(result)
-                    localStorage["date"] = Date.now().toString()
-                    localStorage["joke"] = result
-                } catch (e: Exception) {
-                    println(e.message)
-                }
-            }
-        }
+        fetchRandomJoke { randomJoke = it }
     }
 
     AdminPageLayout {
@@ -189,7 +146,7 @@ fun HomeContent(randomJoke: RandomJoke?) {
                 }
             }
         } else {
-            println("Loading a joke...")
+            LoadingIndicator()
         }
     }
 }
