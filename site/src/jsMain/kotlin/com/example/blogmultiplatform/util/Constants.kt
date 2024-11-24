@@ -5,6 +5,7 @@ object Constants {
     const val SIDE_PANEL_WIDTH = 250
     const val PAGE_WIDTH = 1920
     const val COLLAPSED_PANEL_HEIGHT = 100
+    const val HUMOR_API_URL = "https://api.humorapi.com/jokes/random?api-key=28358d9a175b4d978c2bfe927a2e7b2a&max-length=180"
 }
 
 object Res {
