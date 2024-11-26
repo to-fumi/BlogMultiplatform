@@ -1,6 +1,5 @@
 package com.example.blogmultiplatform.util
 
-import com.example.blogmultiplatform.components.LoadingIndicator
 import com.example.blogmultiplatform.models.RandomJoke
 import com.example.blogmultiplatform.models.User
 import com.example.blogmultiplatform.models.UserWithoutPassword
