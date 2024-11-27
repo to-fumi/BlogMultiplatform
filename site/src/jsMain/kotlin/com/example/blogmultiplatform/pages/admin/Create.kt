@@ -77,6 +77,7 @@ fun CreateScreen() {
     var mainSwitch by remember { mutableStateOf(false) }
     var sponsorSwitch by remember { mutableStateOf(false) }
     var thumbnailInputDisabled by remember { mutableStateOf(true) }
+    var fileName by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(Category.Programming) }
     AdminPageLayout {
         Box(
@@ -219,7 +220,7 @@ fun CreateScreen() {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Switch(
-                        modifier = Modifier.margin(right = 8.px),
+//                        modifier = Modifier.margin(right = 8.px),
                         checked = !thumbnailInputDisabled,
                         onCheckedChange = { thumbnailInputDisabled = !it },
                         size = SwitchSize.MD,
@@ -233,9 +234,10 @@ fun CreateScreen() {
                     )
                 }
                 ThumbnailUploader(
-                    thumbnail = "",
+                    thumbnail = fileName,
                     thumbnailInputDisabled = thumbnailInputDisabled,
                     onThumbnailSelect = { filename, file ->
+                        fileName = filename
                         println(filename)
                         println(file)
                     }
