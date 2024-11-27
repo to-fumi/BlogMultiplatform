@@ -220,7 +220,7 @@ fun CreateScreen() {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Switch(
-//                        modifier = Modifier.margin(right = 8.px),
+                        modifier = Modifier.margin(right = 8.px),
                         checked = !thumbnailInputDisabled,
                         onCheckedChange = { thumbnailInputDisabled = !it },
                         size = SwitchSize.MD,
