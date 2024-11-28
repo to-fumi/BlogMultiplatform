@@ -9,6 +9,7 @@ import com.example.blogmultiplatform.components.AdminPageLayout
 import com.example.blogmultiplatform.models.Category
 import com.example.blogmultiplatform.models.EditorKey
 import com.example.blogmultiplatform.models.Theme
+import com.example.blogmultiplatform.styles.EditorKeyStyle
 import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
 import com.example.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
 import com.example.blogmultiplatform.util.isUserLoggedIn
@@ -52,6 +53,7 @@ import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
 import org.jetbrains.compose.web.attributes.InputType
@@ -392,7 +394,10 @@ fun ThumbnailUploader(
 @Composable
 fun EditorControls(breakpoint: Breakpoint) {
     Box(modifier = Modifier.fillMaxWidth()) {
-        SimpleGrid(numColumns = numColumns(base = 1, sm = 2)) {
+        SimpleGrid(
+            modifier = Modifier.fillMaxWidth(),
+            numColumns = numColumns(base = 1, sm = 2)
+        ) {
             Row(
                 modifier = Modifier
                     .backgroundColor(Theme.LightGray.rgb)
@@ -409,6 +414,10 @@ fun EditorControls(breakpoint: Breakpoint) {
                 Button(
                     attrs = Modifier
                         .height(54.px)
+                        .thenIf(
+                            condition = breakpoint < Breakpoint.SM,
+                            other = Modifier.fillMaxWidth()
+                        )
                         .margin(topBottom = if (breakpoint < Breakpoint.SM) 12.px else 0.px)
                         .padding(leftRight = 24.px)
                         .borderRadius(r = 4.px)
@@ -443,7 +452,7 @@ fun EditorControls(breakpoint: Breakpoint) {
 @Composable
 fun EditorKeyView(key: EditorKey) {
     Box(
-        modifier = Modifier
+        modifier = EditorKeyStyle.toModifier()
             .fillMaxHeight()
             .padding(leftRight = 12.px)
             .borderRadius(r = 4.px)
