@@ -7,14 +7,14 @@ import org.bson.codecs.ObjectIdGenerator
 @Serializable
 actual data class Post(
     @SerialName("_id")
-    actual val id: String,
+    actual val id: String = "",
     actual val author: String,
     actual val date: Long,
     actual val title: String,
     actual val subtitle: String,
     actual val thumbnail: String,
     actual val content: String,
-    actual val category: String,
+    actual val category: Category,
     actual val popular: Boolean = false,
     actual val main: Boolean = false,
     actual val sponsored: Boolean = false,
