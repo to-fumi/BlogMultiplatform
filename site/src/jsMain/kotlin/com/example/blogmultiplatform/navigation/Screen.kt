@@ -5,4 +5,5 @@ sealed class Screen (val route: String) {
     object AdminLogin: Screen(route = "/admin/login")
     object AdminCreate: Screen(route = "/admin/create")
     object AdminMyPosts: Screen(route = "/admin/my-posts")
+    object AdminSuccess: Screen(route = "/admin/success")
 }
