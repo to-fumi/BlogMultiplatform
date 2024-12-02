@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 import com.example.blogmultiplatform.components.AdminPageLayout
 import com.example.blogmultiplatform.components.MessagePopup
 import com.example.blogmultiplatform.models.Category
-import com.example.blogmultiplatform.models.EditorKey
+import com.example.blogmultiplatform.models.EditorControl
 import com.example.blogmultiplatform.models.Post
 import com.example.blogmultiplatform.models.Theme
 import com.example.blogmultiplatform.navigation.Screen
@@ -472,8 +472,8 @@ fun EditorControls(
                     .borderRadius(r = 4.px)
                     .height(54.px)
             ) {
-                EditorKey.entries.forEach {
-                    EditorKeyView(key = it)
+                EditorControl.entries.forEach {
+                    EditorControlView(control = it)
                 }
             }
             Box(
@@ -515,7 +515,7 @@ fun EditorControls(
 }
 
 @Composable
-fun EditorKeyView(key: EditorKey) {
+fun EditorControlView(control: EditorControl) {
     Box(
         modifier = EditorKeyStyle.toModifier()
             .fillMaxHeight()
@@ -526,8 +526,8 @@ fun EditorKeyView(key: EditorKey) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            src = key.icon,
-            alt = "${key.name} Icon"
+            src = control.icon,
+            alt = "${control.name} Icon"
         )
     }
 }
