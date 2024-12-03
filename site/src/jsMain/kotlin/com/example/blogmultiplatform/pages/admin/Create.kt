@@ -18,6 +18,7 @@ import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
 import com.example.blogmultiplatform.util.Constants.SIDE_PANEL_WIDTH
 import com.example.blogmultiplatform.util.Id
 import com.example.blogmultiplatform.util.addPost
+import com.example.blogmultiplatform.util.applyControlStyle
 import com.example.blogmultiplatform.util.isUserLoggedIn
 import com.example.blogmultiplatform.util.noBorder
 import com.varabyte.kobweb.browser.file.loadDataUrlFromDisk
@@ -473,7 +474,10 @@ fun EditorControls(
                     .height(54.px)
             ) {
                 EditorControl.entries.forEach {
-                    EditorControlView(control = it)
+                    EditorControlView(
+                        control = it,
+                        onClick = { applyControlStyle(it) },
+                    )
                 }
             }
             Box(
@@ -515,14 +519,17 @@ fun EditorControls(
 }
 
 @Composable
-fun EditorControlView(control: EditorControl) {
+fun EditorControlView(
+    control: EditorControl,
+    onClick: () -> Unit,
+) {
     Box(
         modifier = EditorKeyStyle.toModifier()
             .fillMaxHeight()
             .padding(leftRight = 12.px)
             .borderRadius(r = 4.px)
             .cursor(Cursor.Pointer)
-            .onClick { },
+            .onClick { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Image(
