@@ -108,6 +108,7 @@ data class CreatePageUiState(
     var editorVisibility: Boolean = true,
     var messagePopup: Boolean = false,
     var linkPopup: Boolean = false,
+    var imagePopup: Boolean = false,
 )
 
 @Page
@@ -278,11 +279,14 @@ fun CreateScreen() {
                     onLinkClick = {
                         uiState = uiState.copy(linkPopup = true)
                     },
+                    onImageClick = {
+                        uiState = uiState.copy(imagePopup = true)
+                    },
                     onEditorVisibilityChange = {
                         uiState = uiState.copy(
                             editorVisibility = !uiState.editorVisibility
                         )
-                    }
+                    },
                 )
                 Editor(editorVisibility = uiState.editorVisibility)
                 CreateButton(
@@ -342,13 +346,29 @@ fun CreateScreen() {
     }
     if(uiState.linkPopup) {
         LinkPopup(
+            editorControl = EditorControl.Link,
             onDialogDismiss = { uiState = uiState.copy(linkPopup = false) },
-            onLinkAdded = { href, title ->
+            onAddClick = { href, title ->
                 applyStyle(
                     ControlStyle.Link(
                         selectedText = getSelectedText(),
                         href = href,
                         title = title,
+                    )
+                )
+            },
+        )
+    }
+    if(uiState.imagePopup) {
+        LinkPopup(
+            editorControl = EditorControl.Image,
+            onDialogDismiss = { uiState = uiState.copy(imagePopup = false) },
+            onAddClick = { imageUrl, description ->
+                applyStyle(
+                    ControlStyle.Image(
+                        selectedText = getSelectedText(),
+                        imageUrl = imageUrl,
+                        desc = description,
                     )
                 )
             },
@@ -483,6 +503,7 @@ fun EditorControls(
     breakpoint: Breakpoint,
     editorVisibility: Boolean,
     onLinkClick: () -> Unit,
+    onImageClick: () -> Unit,
     onEditorVisibilityChange: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
@@ -503,6 +524,7 @@ fun EditorControls(
                             applyControlStyle(
                                 editorControl = it,
                                 onLinkClick = onLinkClick,
+                                onImageClick = onImageClick,
                             )
                         },
                     )
