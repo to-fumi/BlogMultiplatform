@@ -68,4 +68,12 @@ kotlin {
             implementation(libs.kotlinx.coroutine.core)
         }
     }
+
+    targets.configureEach {
+        compilations.configureEach {
+            compileTaskProvider.get().compilerOptions {
+                freeCompilerArgs.add("-Xexpect-actual-classes")
+            }
+        }
+    }
 }
