@@ -2,7 +2,6 @@ package com.example.blogmultiplatform.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.bson.codecs.ObjectIdGenerator
 
 @Serializable
 actual data class Post(
