@@ -417,7 +417,7 @@ fun CategoryDropdown(
                 .classNames("dropdown-menu")
                 .toAttrs()
         ) {
-            Category.values().forEach { category ->
+            Category.values().forEach { category: Category ->
                 Li {
                     A(
                         attrs = Modifier
@@ -519,7 +519,7 @@ fun EditorControls(
                     .borderRadius(r = 4.px)
                     .height(54.px)
             ) {
-                EditorControl.entries.forEach {
+                EditorControl.values().forEach {
                     EditorControlView(
                         control = it,
                         onClick = {
@@ -581,7 +581,7 @@ fun EditorControlView(
 ) {
     Box(
         modifier = EditorKeyStyle.toModifier()
-            .fillMaxHeight()
+            .fillMaxSize()
             .padding(leftRight = 12.px)
             .borderRadius(r = 4.px)
             .cursor(Cursor.Pointer)
