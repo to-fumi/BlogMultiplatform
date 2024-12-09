@@ -34,6 +34,8 @@ import kotlinx.browser.document
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.vh
+import org.jetbrains.compose.web.css.vw
 import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Input
 import org.w3c.dom.HTMLInputElement
@@ -45,8 +47,8 @@ fun MessagePopup(
 ) {
     Box(
         modifier = Modifier
-            .width(100.px)
-            .height(100.px)
+            .width(100.vw)
+            .height(100.vh)
             .position(Position.Fixed)
             .zIndex(19),
         contentAlignment = Alignment.Center,
@@ -83,8 +85,8 @@ fun LinkPopup(
 ) {
     Box(
         modifier = Modifier
-            .width(100.px)
-            .height(100.px)
+            .width(100.vw)
+            .height(100.vh)
             .position(Position.Fixed)
             .zIndex(19),
         contentAlignment = Alignment.Center,

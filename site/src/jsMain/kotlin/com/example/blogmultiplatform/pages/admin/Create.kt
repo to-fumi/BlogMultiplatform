@@ -27,6 +27,7 @@ import com.example.blogmultiplatform.util.getSelectedText
 import com.example.blogmultiplatform.util.isUserLoggedIn
 import com.example.blogmultiplatform.util.noBorder
 import com.varabyte.kobweb.browser.file.loadDataUrlFromDisk
+import com.varabyte.kobweb.compose.css.BoxSizing
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.Overflow
@@ -43,6 +44,7 @@ import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.boxSizing
 import com.varabyte.kobweb.compose.ui.modifiers.classNames
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
@@ -154,7 +156,9 @@ fun CreateScreen() {
                     ) {
                         Switch(
                             modifier = Modifier
-                                .margin(right = 8.px),
+                                .margin(right = 8.px)
+                                .padding(bottom = 5.px)
+                                .boxSizing(BoxSizing.Initial),
                             checked = uiState.popular,
                             onCheckedChange = { uiState = uiState.copy(popular = it) },
                             size = SwitchSize.LG,
@@ -650,9 +654,7 @@ fun Editor(editorVisibility: Boolean) {
                 .scrollBehavior(ScrollBehavior.Smooth)
                 .noBorder()
                 .toAttrs()
-        ) {
-
-        }
+        )
     }
 }
 
