@@ -650,9 +650,7 @@ fun Editor(editorVisibility: Boolean) {
                 .scrollBehavior(ScrollBehavior.Smooth)
                 .noBorder()
                 .toAttrs()
-        ) {
-
-        }
+        )
     }
 }
 
