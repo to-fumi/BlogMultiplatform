@@ -156,9 +156,7 @@ fun CreateScreen() {
                     ) {
                         Switch(
                             modifier = Modifier
-                                .margin(right = 8.px)
-                                .padding(bottom = 5.px)
-                                .boxSizing(BoxSizing.Initial),
+                                .margin(right = 8.px),
                             checked = uiState.popular,
                             onCheckedChange = { uiState = uiState.copy(popular = it) },
                             size = SwitchSize.LG,
