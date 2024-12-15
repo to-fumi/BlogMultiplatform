@@ -8,6 +8,7 @@ import com.example.blogmultiplatform.util.Constants.DATABASE_NAME
 import com.example.blogmultiplatform.util.Constants.POSTS_PER_PAGE
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Filters.`in`
 import com.mongodb.client.model.Sorts.descending
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.varabyte.kobweb.api.data.add
@@ -41,6 +42,12 @@ class MongoDB(
             .skip(skip)
             .limit(POSTS_PER_PAGE)
             .toList()
+    }
+
+    override suspend fun deleteSelectedPosts(ids: List<String>): Boolean {
+        return postCollection
+            .deleteMany(`in`(Post::id.name, ids))
+            .wasAcknowledged()
     }
 
     override suspend fun checkUserExistence(user: User): User? {
