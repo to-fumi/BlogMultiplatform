@@ -18,6 +18,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.id
@@ -37,7 +38,10 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Input
 
 @Composable
-fun SearchBar(onEnterClick: () -> Unit) {
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    onEnterClick: () -> Unit,
+) {
     var focused by remember { mutableStateOf(false) }
 
     Row(
@@ -72,7 +76,7 @@ fun SearchBar(onEnterClick: () -> Unit) {
             type = InputType.Text,
             attrs = Modifier
                 .id(Id.adminSearchBar)
-                .fillMaxWidth()
+                .fillMaxSize()
                 .color(Colors.Black)
                 .backgroundColor(Colors.Transparent)
                 .noBorder()

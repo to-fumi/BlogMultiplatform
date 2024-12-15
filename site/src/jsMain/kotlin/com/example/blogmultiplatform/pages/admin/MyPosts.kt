@@ -26,7 +26,10 @@ import com.example.blogmultiplatform.util.isUserLoggedIn
 import com.example.blogmultiplatform.util.noBorder
 import com.example.blogmultiplatform.util.parseSwitchText
 import com.example.blogmultiplatform.util.searchPostsByTitle
+import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Transition
+import com.varabyte.kobweb.compose.css.TransitionProperty
 import com.varabyte.kobweb.compose.css.Visibility
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -47,6 +50,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.visibility
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
@@ -58,6 +62,7 @@ import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Button
@@ -96,6 +101,7 @@ fun MyPostsScreen() {
     LaunchedEffect(context.route) {
         postsToSkip = 0
         if (hasParams) {
+            (document.getElementById(Id.adminSearchBar) as HTMLInputElement).value = query.replace("%20", " ")
             searchPostsByTitle(
                 query = query,
                 skip = postsToSkip,
@@ -148,6 +154,16 @@ fun MyPostsScreen() {
                 contentAlignment = Alignment.Center
             ) {
                 SearchBar(
+                    modifier = Modifier
+                        .visibility(if(selectable) Visibility.Hidden else Visibility.Visible)
+                        .transition(
+                            Transition.of(
+                                property = TransitionProperty.All,
+                                duration = 200.ms,
+                                timingFunction = null,
+                                delay = null
+                            )
+                        ),
                     onEnterClick = {
                         val query = (document.getElementById(Id.adminSearchBar) as HTMLInputElement).value
                         if(query.isNotEmpty()) {
