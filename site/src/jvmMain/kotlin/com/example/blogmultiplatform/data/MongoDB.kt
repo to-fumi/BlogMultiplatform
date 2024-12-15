@@ -9,6 +9,7 @@ import com.example.blogmultiplatform.util.Constants.POSTS_PER_PAGE
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Filters.`in`
+import com.mongodb.client.model.Filters.regex
 import com.mongodb.client.model.Sorts.descending
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.varabyte.kobweb.api.data.add
@@ -48,6 +49,17 @@ class MongoDB(
         return postCollection
             .deleteMany(`in`(Post::id.name, ids))
             .wasAcknowledged()
+    }
+
+    override suspend fun searchPostsByTitle(query: String, skip: Int): List<PostWithoutDetails> {
+        val regexQuery = query.toRegex(RegexOption.IGNORE_CASE).toPattern()
+        return postCollection
+            .withDocumentClass(PostWithoutDetails::class.java)
+            .find(regex(PostWithoutDetails::title.name, regexQuery))
+            .sort(descending(PostWithoutDetails::date.name))
+            .skip(skip)
+            .limit(POSTS_PER_PAGE)
+            .toList()
     }
 
     override suspend fun checkUserExistence(user: User): User? {
