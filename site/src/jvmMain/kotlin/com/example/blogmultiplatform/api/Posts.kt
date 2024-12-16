@@ -2,6 +2,7 @@ package com.example.blogmultiplatform.api
 
 import com.example.blogmultiplatform.data.MongoDB
 import com.example.blogmultiplatform.models.ApiListResponse
+import com.example.blogmultiplatform.models.ApiResponse
 import com.example.blogmultiplatform.models.Post
 import com.varabyte.kobweb.api.Api
 import com.varabyte.kobweb.api.ApiContext
@@ -80,6 +81,27 @@ suspend fun searchPostsByTitle(context: ApiContext) {
     } catch (e: Exception) {
         context.res.setBodyText(
             Json.encodeToString(ApiListResponse.Error(message = e.message.toString()))
+        )
+    }
+}
+
+@Api(routeOverride = "readselectedpost")
+suspend fun readSelectedPost(context: ApiContext) {
+    val postId = context.req.params["postId"]
+    if(!postId.isNullOrEmpty()) {
+        try {
+            val selectedPost = context.data.getValue<MongoDB>().readSelectedPost(id = postId)
+            context.res.setBodyText(
+                Json.encodeToString(ApiResponse.Success(data = selectedPost))
+            )
+        } catch (e: Exception) {
+            context.res.setBodyText(
+                Json.encodeToString(ApiResponse.Error(message = e.message.toString()))
+            )
+        }
+    } else {
+        context.res.setBodyText(
+            Json.encodeToString(ApiResponse.Error(message = "Selected Post does not exist."))
         )
     }
 }

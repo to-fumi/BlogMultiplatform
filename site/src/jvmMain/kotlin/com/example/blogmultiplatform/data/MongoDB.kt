@@ -62,6 +62,13 @@ class MongoDB(
             .toList()
     }
 
+    override suspend fun readSelectedPost(id: String): Post {
+        return postCollection
+            .find(eq(Post::id.name, id))
+            .toList()
+            .first()
+    }
+
     override suspend fun checkUserExistence(user: User): User? {
         return try {
             userCollection
