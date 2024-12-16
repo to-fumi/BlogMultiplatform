@@ -1,11 +1,11 @@
 package com.example.blogmultiplatform.data
 
+import com.example.blogmultiplatform.models.Constants.POSTS_PER_PAGE
 import com.example.blogmultiplatform.models.Post
 import com.example.blogmultiplatform.models.PostWithoutDetails
 import com.example.blogmultiplatform.models.User
 import com.example.blogmultiplatform.util.Constants.CONNECTION_STRING_URI_PLACEHOLDER
 import com.example.blogmultiplatform.util.Constants.DATABASE_NAME
-import com.example.blogmultiplatform.util.Constants.POSTS_PER_PAGE
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Filters.`in`
