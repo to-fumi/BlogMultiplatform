@@ -11,6 +11,7 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Filters.`in`
 import com.mongodb.client.model.Filters.regex
 import com.mongodb.client.model.Sorts.descending
+import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.varabyte.kobweb.api.data.add
 import com.varabyte.kobweb.api.init.InitApi
@@ -33,6 +34,24 @@ class MongoDB(
 
     override suspend fun addPost(post: Post): Boolean {
         return postCollection.insertOne(post).wasAcknowledged()
+    }
+
+    override suspend fun updatePost(post: Post): Boolean {
+        return postCollection
+            .updateOne(
+                eq(Post::id.name, post.id),
+                Updates.combine(
+                    Updates.set(Post::title.name, post.title),
+                    Updates.set(Post::subtitle.name, post.subtitle),
+                    Updates.set(Post::category.name, post.category),
+                    Updates.set(Post::thumbnail.name, post.thumbnail),
+                    Updates.set(Post::content.name, post.content),
+                    Updates.set(Post::main.name, post.main),
+                    Updates.set(Post::popular.name, post.popular),
+                    Updates.set(Post::sponsored.name, post.sponsored),
+                ),
+            )
+            .wasAcknowledged()
     }
 
     override suspend fun readMyPosts(skip: Int, author: String): List<PostWithoutDetails> {
