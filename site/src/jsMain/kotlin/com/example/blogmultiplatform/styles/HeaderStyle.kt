@@ -1,8 +1,8 @@
 package com.example.blogmultiplatform.styles
 
 import com.example.blogmultiplatform.models.Theme
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Transition
+import com.varabyte.kobweb.compose.style.KobwebComposeStyleSheet.anyLink
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.color
