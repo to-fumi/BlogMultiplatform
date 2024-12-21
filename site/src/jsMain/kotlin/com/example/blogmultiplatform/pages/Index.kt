@@ -3,7 +3,9 @@ package com.example.blogmultiplatform.pages
 import androidx.compose.runtime.*
 import com.example.blogmultiplatform.components.CategoryNavigationItems
 import com.example.blogmultiplatform.components.OverflowSidePanel
+import com.example.blogmultiplatform.models.ApiListResponse
 import com.example.blogmultiplatform.sections.HeaderSection
+import com.example.blogmultiplatform.util.fetchMainPosts
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -24,6 +26,18 @@ fun HomePage() {
     // TODO: Replace the following with your own content
     val breakpoint = rememberBreakpoint()
     var overflowOpened by remember { mutableStateOf(false) }
+    var mainPosts by remember { mutableStateOf<ApiListResponse>(ApiListResponse.Idle) }
+
+    LaunchedEffect(Unit) {
+        fetchMainPosts(
+            onSuccess = {
+                mainPosts = it
+                println(mainPosts)
+                        },
+            onError = { },
+        )
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
