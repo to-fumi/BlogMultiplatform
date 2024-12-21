@@ -45,6 +45,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.textOverflow
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.visibility
 import com.varabyte.kobweb.compose.ui.styleModifier
+import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.graphics.Image
@@ -52,6 +53,8 @@ import com.varabyte.kobweb.silk.components.layout.SimpleGrid
 import com.varabyte.kobweb.silk.components.layout.numColumns
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
+import org.jetbrains.compose.web.css.CSSSizeValue
+import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
@@ -60,61 +63,109 @@ import org.jetbrains.compose.web.dom.CheckboxInput
 
 @Composable
 fun PostPreview(
+    modifier: Modifier = Modifier,
     post: PostWithoutDetails,
-    selectableMode: Boolean,
-    onSelect: (String) -> Unit,
-    onDeselect: (String) -> Unit,
+    selectableMode: Boolean = false,
+    darkTheme: Boolean = false,
+    vertical: Boolean = true,
+    thumbnailHeight: CSSSizeValue<CSSUnit.px> = 320.px,
+    titleMaxLines: Int = 2,
+    onSelect: (String) -> Unit = {},
+    onDeselect: (String) -> Unit = {},
 ) {
     val context = rememberPageContext()
     var checked by remember(selectableMode) { mutableStateOf(false) }
 
+    if (vertical) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth(if(darkTheme) 100.percent else 95.percent)
+                .margin(bottom = 24.px)
+                .padding(all = if (selectableMode) 10.px else 0.px)
+                .borderRadius(r = 4.px)
+                .border(
+                    width = if (selectableMode) 4.px else 0.px,
+                    style = if (selectableMode) LineStyle.Solid else LineStyle.None,
+                    color = if (checked) Theme.Primary.rgb else Theme.Gray.rgb,
+                )
+                .onClick {
+                    if(selectableMode) {
+                        checked = !checked
+                        if(checked) {
+                            onSelect(post.id)
+                        } else {
+                            onDeselect(post.id)
+                        }
+                    } else {
+                        context.router.navigateTo(Screen.AdminCreate.passPostId(id = post.id))
+                    }
+                }
+                .transition(
+                    Transition.of(
+                        property = TransitionProperty.All,
+                        duration = 200.ms,
+                        timingFunction = null,
+                        delay = null
+                    )
+                )
+                .cursor(Cursor.Pointer),
+        ) {
+            PostContent(
+                post = post,
+                selectableMode = selectableMode,
+                darkTheme = darkTheme,
+                vertical = vertical,
+                thumbnailHeight = thumbnailHeight,
+                titleMaxLines = titleMaxLines,
+                checked = checked,
+            )
+        }
+    } else {
+        Row(modifier = Modifier.cursor(Cursor.Pointer)) {
+            PostContent(
+                post = post,
+                selectableMode = selectableMode,
+                darkTheme = darkTheme,
+                vertical = vertical,
+                thumbnailHeight = thumbnailHeight,
+                titleMaxLines = titleMaxLines,
+                checked = checked,
+            )
+        }
+    }
+}
+
+@Composable
+fun PostContent(
+    post: PostWithoutDetails,
+    selectableMode: Boolean,
+    darkTheme: Boolean,
+    vertical: Boolean,
+    thumbnailHeight: CSSSizeValue<CSSUnit.px>,
+    titleMaxLines: Int,
+    checked: Boolean,
+) {
+    Image(
+        modifier = Modifier
+            .margin(bottom = 16.px)
+            .height(size = thumbnailHeight)
+            .fillMaxWidth()
+            .objectFit(ObjectFit.Cover),
+        src = post.thumbnail,
+        alt = "Post Thumbnail Image"
+    )
     Column(
         modifier = Modifier
-            .fillMaxWidth(95.percent)
-            .margin(bottom = 24.px)
-            .padding(all = if (selectableMode) 10.px else 0.px)
-            .borderRadius(r = 4.px)
-            .border(
-                width = if (selectableMode) 4.px else 0.px,
-                style = if (selectableMode) LineStyle.Solid else LineStyle.None,
-                color = if (checked) Theme.Primary.rgb else Theme.Gray.rgb,
+            .thenIf(
+                condition = !vertical,
+                other = Modifier.margin(left = 20.px)
             )
-            .onClick {
-                if(selectableMode) {
-                    checked = !checked
-                    if(checked) {
-                        onSelect(post.id)
-                    } else {
-                        onDeselect(post.id)
-                    }
-                } else {
-                    context.router.navigateTo(Screen.AdminCreate.passPostId(id = post.id))
-                }
-            }
-            .transition(
-                Transition.of(
-                    property = TransitionProperty.All,
-                    duration = 200.ms,
-                    timingFunction = null,
-                    delay = null
-                )
-            )
-            .cursor(Cursor.Pointer),
     ) {
-        Image(
-            modifier = Modifier
-                .margin(bottom = 16.px)
-                .height(320.px)
-                .fillMaxWidth()
-                .objectFit(ObjectFit.Cover),
-            src = post.thumbnail,
-            alt = "Post Thumbnail Image"
-        )
         SpanText(
             modifier = Modifier
                 .fontFamily(FONT_FAMILY)
                 .fontSize(12.px)
-                .color(Theme.HalfBlack.rgb),
+                .color(if (darkTheme) Theme.HalfWhite.rgb else Theme.HalfBlack.rgb),
             text = post.date.parseDateString(),
         )
         SpanText(
@@ -123,13 +174,13 @@ fun PostPreview(
                 .fontFamily(FONT_FAMILY)
                 .fontSize(20.px)
                 .fontWeight(FontWeight.Bold)
-                .color(Colors.Black)
+                .color(if (darkTheme) Colors.White else Colors.Black)
                 .textOverflow(TextOverflow.Ellipsis)
                 .overflow(Overflow.Hidden)
                 .styleModifier {
                     property("display", "-webkit-box")
-                    property("-webkit-line-clamp", "2")
-                    property("line-clamp", "2")
+                    property("-webkit-line-clamp", "$titleMaxLines")
+                    property("line-clamp", "$titleMaxLines")
                     property("-webkit-box-orient", "vertical")
                 },
             text = post.title,
@@ -139,7 +190,7 @@ fun PostPreview(
                 .margin(bottom = 8.px)
                 .fontFamily(FONT_FAMILY)
                 .fontSize(16.px)
-                .color(Colors.Black)
+                .color(if (darkTheme) Colors.White else Colors.Black)
                 .textOverflow(TextOverflow.Ellipsis)
                 .overflow(Overflow.Hidden)
                 .styleModifier {
@@ -155,7 +206,10 @@ fun PostPreview(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            CategoryChip(category = post.category)
+            CategoryChip(
+                category = post.category,
+                darkTheme = darkTheme,
+            )
             if (selectableMode) {
                 CheckboxInput(
                     checked = checked,
