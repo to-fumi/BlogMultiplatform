@@ -152,7 +152,7 @@ fun PostContent(
 ) {
     Image(
         modifier = Modifier
-            .margin(bottom = 16.px)
+            .margin(bottom = if (darkTheme) 20.px else 16.px)
             .height(size = thumbnailHeight)
             .fillMaxWidth(percent = thumbnailWidth)
             .objectFit(ObjectFit.Cover),
