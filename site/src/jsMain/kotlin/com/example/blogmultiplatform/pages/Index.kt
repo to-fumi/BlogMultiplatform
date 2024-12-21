@@ -4,8 +4,11 @@ import androidx.compose.runtime.*
 import com.example.blogmultiplatform.components.CategoryNavigationItems
 import com.example.blogmultiplatform.components.OverflowSidePanel
 import com.example.blogmultiplatform.models.ApiListResponse
+import com.example.blogmultiplatform.models.Constants.POSTS_PER_PAGE
+import com.example.blogmultiplatform.models.PostWithoutDetails
 import com.example.blogmultiplatform.sections.HeaderSection
 import com.example.blogmultiplatform.sections.MainSection
+import com.example.blogmultiplatform.sections.PostsSection
 import com.example.blogmultiplatform.util.fetchLatestPosts
 import com.example.blogmultiplatform.util.fetchMainPosts
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -17,6 +20,7 @@ import com.example.blogmultiplatform.worker.EchoWorker
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import kotlinx.coroutines.launch
 
 @Page
 @Composable
@@ -26,11 +30,13 @@ fun HomePage() {
         worker.postInput("Hello, worker!")
     }
     // TODO: Replace the following with your own content
+    val scope = rememberCoroutineScope()
     val breakpoint = rememberBreakpoint()
     var overflowOpened by remember { mutableStateOf(false) }
     var mainPosts by remember { mutableStateOf<ApiListResponse>(ApiListResponse.Idle) }
-    var latestPosts by remember { mutableStateOf<ApiListResponse>(ApiListResponse.Idle) }
+    val latestPosts = remember { mutableStateListOf<PostWithoutDetails>() }
     var latestPostsToSkip by remember { mutableStateOf(0) }
+    var showMoreLatest by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         fetchMainPosts(
@@ -39,7 +45,13 @@ fun HomePage() {
         )
         fetchLatestPosts(
             skip = latestPostsToSkip,
-            onSuccess = { latestPosts = it },
+            onSuccess = {
+                if (it is ApiListResponse.Success) {
+                    latestPosts.addAll(it.data)
+                    latestPostsToSkip += POSTS_PER_PAGE
+                    if (it.data.size >= POSTS_PER_PAGE) showMoreLatest = true
+                }
+            },
             onError = { },
         )
     }
@@ -66,6 +78,34 @@ fun HomePage() {
         MainSection(
             breakpoint = breakpoint,
             posts = mainPosts,
+        )
+        PostsSection(
+            breakpoint = breakpoint,
+            posts = latestPosts,
+            title = "Latest Posts",
+            showMoreVisibility = showMoreLatest,
+            onShowMore = {
+                scope.launch {
+                    fetchLatestPosts(
+                        skip = latestPostsToSkip,
+                        onSuccess = { response ->
+                            if (response is ApiListResponse.Success) {
+                                if (response.data.isNotEmpty()) {
+                                    if (response.data.size < POSTS_PER_PAGE) {
+                                        showMoreLatest = false
+                                    }
+                                    latestPosts.addAll(response.data)
+                                    latestPostsToSkip += POSTS_PER_PAGE
+                                } else {
+                                    showMoreLatest = false
+                                }
+                            }
+                        },
+                        onError = {},
+                    )
+                }
+            },
+            onClick = {},
         )
     }
 }
