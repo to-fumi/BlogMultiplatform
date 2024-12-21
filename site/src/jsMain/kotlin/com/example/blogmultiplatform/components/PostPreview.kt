@@ -10,6 +10,7 @@ import com.example.blogmultiplatform.models.Theme
 import com.example.blogmultiplatform.navigation.Screen
 import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
 import com.example.blogmultiplatform.util.parseDateString
+import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
@@ -69,6 +70,7 @@ fun PostPreview(
     darkTheme: Boolean = false,
     vertical: Boolean = true,
     thumbnailHeight: CSSSizeValue<CSSUnit.px> = 320.px,
+    thumbnailWidth: CSSLengthOrPercentageNumericValue = 100.percent,
     titleMaxLines: Int = 2,
     onSelect: (String) -> Unit = {},
     onDeselect: (String) -> Unit = {},
@@ -116,6 +118,7 @@ fun PostPreview(
                 darkTheme = darkTheme,
                 vertical = vertical,
                 thumbnailHeight = thumbnailHeight,
+                thumbnailWidth = thumbnailWidth,
                 titleMaxLines = titleMaxLines,
                 checked = checked,
             )
@@ -128,6 +131,7 @@ fun PostPreview(
                 darkTheme = darkTheme,
                 vertical = vertical,
                 thumbnailHeight = thumbnailHeight,
+                thumbnailWidth = thumbnailWidth,
                 titleMaxLines = titleMaxLines,
                 checked = checked,
             )
@@ -142,6 +146,7 @@ fun PostContent(
     darkTheme: Boolean,
     vertical: Boolean,
     thumbnailHeight: CSSSizeValue<CSSUnit.px>,
+    thumbnailWidth: CSSLengthOrPercentageNumericValue,
     titleMaxLines: Int,
     checked: Boolean,
 ) {
@@ -149,7 +154,7 @@ fun PostContent(
         modifier = Modifier
             .margin(bottom = 16.px)
             .height(size = thumbnailHeight)
-            .fillMaxWidth()
+            .fillMaxWidth(percent = thumbnailWidth)
             .objectFit(ObjectFit.Cover),
         src = post.thumbnail,
         alt = "Post Thumbnail Image"

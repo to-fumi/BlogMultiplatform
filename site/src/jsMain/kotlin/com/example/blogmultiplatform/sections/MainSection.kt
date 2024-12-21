@@ -82,6 +82,7 @@ fun MainPosts(
                         darkTheme = true,
                         vertical = false,
                         thumbnailHeight = 200.px,
+                        thumbnailWidth = 35.percent,
                         titleMaxLines = 1,
                     )
                 }
