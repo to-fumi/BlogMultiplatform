@@ -6,6 +6,7 @@ import com.example.blogmultiplatform.models.PostWithoutDetails
 import com.example.blogmultiplatform.models.User
 import com.example.blogmultiplatform.util.Constants.CONNECTION_STRING_URI_PLACEHOLDER
 import com.example.blogmultiplatform.util.Constants.DATABASE_NAME
+import com.example.blogmultiplatform.util.Constants.MAIN_POSTS_LIMIT
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Filters.`in`
@@ -61,6 +62,15 @@ class MongoDB(
             .sort(descending(PostWithoutDetails::date.name))
             .skip(skip)
             .limit(POSTS_PER_PAGE)
+            .toList()
+    }
+
+    override suspend fun readMainPosts(): List<PostWithoutDetails> {
+        return postCollection
+            .withDocumentClass(PostWithoutDetails::class.java)
+            .find(eq(PostWithoutDetails::main.name, true))
+            .sort(descending(PostWithoutDetails::date.name))
+            .limit(MAIN_POSTS_LIMIT)
             .toList()
     }
 
