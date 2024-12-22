@@ -7,7 +7,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.example.blogmultiplatform.models.PostWithoutDetails
 import com.example.blogmultiplatform.models.Theme
-import com.example.blogmultiplatform.navigation.Screen
 import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
 import com.example.blogmultiplatform.util.parseDateString
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
@@ -44,7 +43,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.CSSColorValue
@@ -71,13 +69,16 @@ fun PostPreview(
     onDeselect: (String) -> Unit = {},
     onClick: (String) -> Unit = {},
 ) {
-    val context = rememberPageContext()
     var checked by remember(selectableMode) { mutableStateOf(false) }
 
     if (vertical) {
         Column(
             modifier = modifier
-                .fillMaxWidth(if(darkTheme) 100.percent else 95.percent)
+                .fillMaxWidth(
+                    if (darkTheme) 100.percent
+                    else if (titleColor == Theme.Sponsored.rgb) 100.percent
+                    else 95.percent
+                )
                 .margin(bottom = 24.px)
                 .padding(all = if (selectableMode) 10.px else 0.px)
                 .borderRadius(r = 4.px)

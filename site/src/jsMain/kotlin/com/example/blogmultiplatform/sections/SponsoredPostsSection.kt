@@ -93,10 +93,11 @@ fun SponsoredPosts(
         }
         SimpleGrid(
             modifier = Modifier.fillMaxWidth(),
-            numColumns = numColumns(base = 1, lg = 2),
+            numColumns = numColumns(base = 1, xl = 2),
         ) {
             posts.forEach { post ->
                 PostPreview(
+                    modifier = Modifier.margin(right = 50.px),
                     post = post,
                     vertical = breakpoint < Breakpoint.MD,
                     thumbnailHeight = if (breakpoint >= Breakpoint.MD) 200.px else 300.px,
