@@ -71,8 +71,12 @@ fun HomePage() {
         )
         fetchPopularPosts(
             skip = popularPostsToSkip,
-            onSuccess = {
-
+            onSuccess = { response ->
+                if (response is ApiListResponse.Success) {
+                    popularPosts.addAll(response.data)
+                    popularPostsToSkip += POSTS_PER_PAGE
+                    if (response.data.size >= POSTS_PER_PAGE) showMorePopular = true
+                }
             },
             onError = {},
         )
@@ -132,6 +136,34 @@ fun HomePage() {
         SponsoredPostsSection(
             breakpoint = breakpoint,
             posts = sponsoredPosts,
+            onClick = {},
+        )
+        PostsSection(
+            breakpoint = breakpoint,
+            posts = popularPosts,
+            title = "Popular Posts",
+            showMoreVisibility = showMorePopular,
+            onShowMore = {
+                scope.launch {
+                    fetchPopularPosts(
+                        skip = popularPostsToSkip,
+                        onSuccess = { response ->
+                            if (response is ApiListResponse.Success) {
+                                if (response.data.isNotEmpty()) {
+                                    if (response.data.size < POSTS_PER_PAGE) {
+                                        showMorePopular = false
+                                    }
+                                    popularPosts.addAll(response.data)
+                                    popularPostsToSkip += POSTS_PER_PAGE
+                                } else {
+                                    showMorePopular = false
+                                }
+                            }
+                        },
+                        onError = {},
+                    )
+                }
+            },
             onClick = {},
         )
     }
