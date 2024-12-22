@@ -11,6 +11,7 @@ import com.example.blogmultiplatform.sections.MainSection
 import com.example.blogmultiplatform.sections.PostsSection
 import com.example.blogmultiplatform.util.fetchLatestPosts
 import com.example.blogmultiplatform.util.fetchMainPosts
+import com.example.blogmultiplatform.util.fetchSponsoredPosts
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -35,6 +36,7 @@ fun HomePage() {
     var overflowOpened by remember { mutableStateOf(false) }
     var mainPosts by remember { mutableStateOf<ApiListResponse>(ApiListResponse.Idle) }
     val latestPosts = remember { mutableStateListOf<PostWithoutDetails>() }
+    val sponsoredPosts = remember { mutableStateListOf<PostWithoutDetails>() }
     var latestPostsToSkip by remember { mutableStateOf(0) }
     var showMoreLatest by remember { mutableStateOf(false) }
 
@@ -52,6 +54,10 @@ fun HomePage() {
                     if (it.data.size >= POSTS_PER_PAGE) showMoreLatest = true
                 }
             },
+            onError = { },
+        )
+        fetchSponsoredPosts(
+            onSuccess = { },
             onError = { },
         )
     }
