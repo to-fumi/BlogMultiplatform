@@ -90,6 +90,15 @@ class MongoDB(
             .toList()
     }
 
+    override suspend fun readSponsoredPosts(): List<PostWithoutDetails> {
+        return postCollection
+            .withDocumentClass(PostWithoutDetails::class.java)
+            .find(eq(PostWithoutDetails::sponsored.name, true))
+            .sort(descending(PostWithoutDetails::date.name))
+            .limit(2)
+            .toList()
+    }
+
     override suspend fun deleteSelectedPosts(ids: List<String>): Boolean {
         return postCollection
             .deleteMany(`in`(Post::id.name, ids))
