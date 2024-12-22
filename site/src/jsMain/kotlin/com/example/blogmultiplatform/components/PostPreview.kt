@@ -47,6 +47,7 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
+import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.LineStyle
@@ -65,6 +66,7 @@ fun PostPreview(
     thumbnailHeight: CSSSizeValue<CSSUnit.px> = 320.px,
     thumbnailWidth: CSSLengthOrPercentageNumericValue = 100.percent,
     titleMaxLines: Int = 2,
+    titleColor: CSSColorValue = Colors.Black,
     onSelect: (String) -> Unit = {},
     onDeselect: (String) -> Unit = {},
     onClick: (String) -> Unit = {},
@@ -114,11 +116,16 @@ fun PostPreview(
                 thumbnailHeight = thumbnailHeight,
                 thumbnailWidth = thumbnailWidth,
                 titleMaxLines = titleMaxLines,
+                titleColor = titleColor,
                 checked = checked,
             )
         }
     } else {
-        Row(modifier = Modifier.cursor(Cursor.Pointer)) {
+        Row(
+            modifier = Modifier
+                .onClick { onClick(post.id) }
+                .cursor(Cursor.Pointer)
+        ) {
             PostContent(
                 post = post,
                 selectableMode = selectableMode,
@@ -127,6 +134,7 @@ fun PostPreview(
                 thumbnailHeight = thumbnailHeight,
                 thumbnailWidth = thumbnailWidth,
                 titleMaxLines = titleMaxLines,
+                titleColor = titleColor,
                 checked = checked,
             )
         }
@@ -142,6 +150,7 @@ fun PostContent(
     thumbnailHeight: CSSSizeValue<CSSUnit.px>,
     thumbnailWidth: CSSLengthOrPercentageNumericValue,
     titleMaxLines: Int,
+    titleColor: CSSColorValue,
     checked: Boolean,
 ) {
     Image(
@@ -173,7 +182,7 @@ fun PostContent(
                 .fontFamily(FONT_FAMILY)
                 .fontSize(20.px)
                 .fontWeight(FontWeight.Bold)
-                .color(if (darkTheme) Colors.White else Colors.Black)
+                .color(if (darkTheme) Colors.White else titleColor)
                 .textOverflow(TextOverflow.Ellipsis)
                 .overflow(Overflow.Hidden)
                 .styleModifier {
@@ -189,7 +198,7 @@ fun PostContent(
                 .margin(bottom = 8.px)
                 .fontFamily(FONT_FAMILY)
                 .fontSize(16.px)
-                .color(if (darkTheme) Colors.White else Colors.Black)
+                .color(if (darkTheme) Colors.White else titleColor)
                 .textOverflow(TextOverflow.Ellipsis)
                 .overflow(Overflow.Hidden)
                 .styleModifier {
