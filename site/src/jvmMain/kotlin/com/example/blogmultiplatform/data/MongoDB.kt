@@ -99,6 +99,16 @@ class MongoDB(
             .toList()
     }
 
+    override suspend fun readPopularPosts(skip: Int): List<PostWithoutDetails> {
+        return postCollection
+            .withDocumentClass(PostWithoutDetails::class.java)
+            .find(eq(PostWithoutDetails::popular.name, true))
+            .sort(descending(PostWithoutDetails::date.name))
+            .skip(skip)
+            .limit(POSTS_PER_PAGE)
+            .toList()
+    }
+
     override suspend fun deleteSelectedPosts(ids: List<String>): Boolean {
         return postCollection
             .deleteMany(`in`(Post::id.name, ids))
