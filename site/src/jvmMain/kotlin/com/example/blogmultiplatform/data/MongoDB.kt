@@ -1,6 +1,7 @@
 package com.example.blogmultiplatform.data
 
 import com.example.blogmultiplatform.models.Constants.POSTS_PER_PAGE
+import com.example.blogmultiplatform.models.Newsletter
 import com.example.blogmultiplatform.models.Post
 import com.example.blogmultiplatform.models.PostWithoutDetails
 import com.example.blogmultiplatform.models.User
@@ -32,6 +33,7 @@ class MongoDB(
     private val database = mongoClient.getDatabase(DATABASE_NAME)
     private val userCollection = database.getCollection<User>("users")
     private val postCollection = database.getCollection<Post>("post")
+    private val newsletterCollection = database.getCollection<Newsletter>("newsletter")
 
     override suspend fun addPost(post: Post): Boolean {
         return postCollection.insertOne(post).wasAcknowledged()
@@ -155,6 +157,21 @@ class MongoDB(
         } catch (e: Exception) {
             context.logger.error(e.message.toString())
             false
+        }
+    }
+
+    override suspend fun subscribe(newsletter: Newsletter): String {
+        val result = newsletterCollection
+            .find(eq(Newsletter::email.name, newsletter.email))
+            .toList()
+        return if (result.isNotEmpty()) {
+            "You're already subscribed."
+        } else {
+            val newEmail = newsletterCollection
+                .insertOne(newsletter)
+                .wasAcknowledged()
+            if (newEmail) "Successfully Subscribed!"
+            else "Something went wrong. Please try again later."
         }
     }
 }
