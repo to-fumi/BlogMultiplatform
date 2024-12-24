@@ -3,8 +3,6 @@ package com.example.blogmultiplatform.sections
 import androidx.compose.runtime.Composable
 import com.example.blogmultiplatform.components.PostPreview
 import com.example.blogmultiplatform.models.ApiListResponse
-import com.example.blogmultiplatform.models.ApiResponse
-import com.example.blogmultiplatform.models.Post
 import com.example.blogmultiplatform.models.PostWithoutDetails
 import com.example.blogmultiplatform.models.Theme
 import com.example.blogmultiplatform.util.Constants.PAGE_WIDTH
@@ -25,6 +23,7 @@ import org.jetbrains.compose.web.css.px
 fun MainSection(
     breakpoint: Breakpoint,
     posts: ApiListResponse,
+    onClick: (String) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -44,6 +43,7 @@ fun MainSection(
                     MainPosts(
                         breakpoint = breakpoint,
                         posts = posts.data,
+                        onClick = onClick,
                     )
                 }
                 is ApiListResponse.Error -> {}
@@ -56,6 +56,7 @@ fun MainSection(
 fun MainPosts(
     breakpoint: Breakpoint,
     posts: List<PostWithoutDetails>,
+    onClick: (String) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -70,20 +71,22 @@ fun MainPosts(
                 post = posts.first(),
                 darkTheme = true,
                 thumbnailHeight = 640.px,
+                onClick = { onClick(posts.first().id) },
             )
             Column(
                 modifier = Modifier
                     .fillMaxWidth(80.percent)
                     .margin(left = 20.px)
             ) {
-                posts.drop(1).forEach {
+                posts.drop(1).forEach { postWithoutDetails ->
                     PostPreview(
-                        post = it,
+                        post = postWithoutDetails,
                         darkTheme = true,
                         vertical = false,
                         thumbnailHeight = 200.px,
                         thumbnailWidth = 35.percent,
                         titleMaxLines = 1,
+                        onClick = { onClick(postWithoutDetails.id) }
                     )
                 }
             }
@@ -92,18 +95,21 @@ fun MainPosts(
                 PostPreview(
                     post = posts.first(),
                     darkTheme = true,
+                    onClick = { posts.first().id }
                 )
             }
             Box(modifier = Modifier.margin(left = 10.px)) {
                 PostPreview(
                     post = posts[1],
                     darkTheme = true,
+                    onClick = { posts[1].id }
                 )
             }
         } else {
             PostPreview(
                 post = posts.first(),
                 darkTheme = true,
+                onClick = { posts.first().id }
             )
         }
     }
