@@ -6,7 +6,6 @@ import com.example.blogmultiplatform.models.Theme
 import com.example.blogmultiplatform.navigation.Screen
 import com.example.blogmultiplatform.styles.CategoryItemStyle
 import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
-import com.example.blogmultiplatform.util.searchPostsByCategory
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextDecorationLine
 import com.varabyte.kobweb.compose.ui.Modifier
