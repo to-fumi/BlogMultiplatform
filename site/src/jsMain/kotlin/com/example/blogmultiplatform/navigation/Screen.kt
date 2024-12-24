@@ -26,4 +26,7 @@ sealed class Screen (val route: String) {
 
         fun searchByTitle(query: String) = "/search/query?${QUERY_PARAM}=$query"
     }
+    object PostPage: Screen(route = "/posts/post") {
+        fun getPost(id: String) = "/posts/post?${POST_ID_PARAM}=$id"
+    }
 }
