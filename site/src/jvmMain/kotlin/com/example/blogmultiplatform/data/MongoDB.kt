@@ -29,7 +29,7 @@ fun initMongoDB(context: InitApiContext) {
 
 class MongoDB(
     private val context: InitApiContext,
-): MongoRepository {
+) : MongoRepository {
     private val mongoClient = MongoClient.create(CONNECTION_STRING_URI_PLACEHOLDER)
     private val database = mongoClient.getDatabase(DATABASE_NAME)
     private val userCollection = database.getCollection<User>("users")
@@ -58,7 +58,10 @@ class MongoDB(
             .wasAcknowledged()
     }
 
-    override suspend fun readMyPosts(skip: Int, author: String): List<PostWithoutDetails> {
+    override suspend fun readMyPosts(
+        skip: Int,
+        author: String,
+    ): List<PostWithoutDetails> {
         return postCollection
             .withDocumentClass(PostWithoutDetails::class.java)
             .find(eq(PostWithoutDetails::author.name, author))
@@ -85,7 +88,7 @@ class MongoDB(
                     eq(PostWithoutDetails::popular.name, false),
                     eq(PostWithoutDetails::main.name, false),
                     eq(PostWithoutDetails::sponsored.name, false),
-                )
+                ),
             )
             .sort(descending(PostWithoutDetails::date.name))
             .skip(skip)
@@ -118,7 +121,10 @@ class MongoDB(
             .wasAcknowledged()
     }
 
-    override suspend fun searchPostsByTitle(query: String, skip: Int): List<PostWithoutDetails> {
+    override suspend fun searchPostsByTitle(
+        query: String,
+        skip: Int,
+    ): List<PostWithoutDetails> {
         val regexQuery = query.toRegex(RegexOption.IGNORE_CASE).toPattern()
         return postCollection
             .withDocumentClass(PostWithoutDetails::class.java)
@@ -131,7 +137,7 @@ class MongoDB(
 
     override suspend fun searchPostsByCategory(
         category: Category,
-        skip: Int
+        skip: Int,
     ): List<PostWithoutDetails> {
         return postCollection
             .withDocumentClass(PostWithoutDetails::class.java)
@@ -156,7 +162,7 @@ class MongoDB(
                     and(
                         eq(User::username.name, user.username),
                         eq(User::password.name, user.password),
-                    )
+                    ),
                 ).firstOrNull()
         } catch (e: Exception) {
             context.logger.error(e.message.toString())
@@ -175,17 +181,22 @@ class MongoDB(
     }
 
     override suspend fun subscribe(newsletter: Newsletter): String {
-        val result = newsletterCollection
-            .find(eq(Newsletter::email.name, newsletter.email))
-            .toList()
+        val result =
+            newsletterCollection
+                .find(eq(Newsletter::email.name, newsletter.email))
+                .toList()
         return if (result.isNotEmpty()) {
             "You're already subscribed."
         } else {
-            val newEmail = newsletterCollection
-                .insertOne(newsletter)
-                .wasAcknowledged()
-            if (newEmail) "Successfully Subscribed!"
-            else "Something went wrong. Please try again later."
+            val newEmail =
+                newsletterCollection
+                    .insertOne(newsletter)
+                    .wasAcknowledged()
+            if (newEmail) {
+                "Successfully Subscribed!"
+            } else {
+                "Something went wrong. Please try again later."
+            }
         }
     }
 }

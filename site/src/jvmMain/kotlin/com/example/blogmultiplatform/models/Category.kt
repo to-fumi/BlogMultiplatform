@@ -6,12 +6,14 @@ import kotlinx.serialization.Serializable
 actual enum class Category {
     Technology,
     Programming,
-    Design;
+    Design,
+    ;
 
     actual val color: String
-        get() = when (this) {
-            Technology -> Theme.Green.hex
-            Programming -> Theme.Yellow.hex
-            Design -> Theme.Purple.hex
-        }
+        get() =
+            when (this) {
+                Technology -> Theme.Green.hex
+                Programming -> Theme.Yellow.hex
+                Design -> Theme.Purple.hex
+            }
 }
