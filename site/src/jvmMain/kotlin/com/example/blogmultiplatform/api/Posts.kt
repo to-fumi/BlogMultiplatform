@@ -16,8 +16,8 @@ import com.varabyte.kobweb.api.data.getValue
 import com.varabyte.kobweb.api.http.Request
 import com.varabyte.kobweb.api.http.Response
 import com.varabyte.kobweb.api.http.setBodyText
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.bson.codecs.ObjectIdGenerator
 
 @Api(routeOverride = "addpost")
@@ -38,9 +38,9 @@ suspend fun updatePost(context: ApiContext) {
         context.res.setBody(
             updatedPost?.let {
                 context.data.getValue<MongoDB>().updatePost(it)
-            }
+            },
         )
-    } catch(e: Exception) {
+    } catch (e: Exception) {
         context.res.setBody(e.message)
     }
 }
@@ -50,10 +50,11 @@ suspend fun readMyPosts(context: ApiContext) {
     try {
         val skip = context.req.params[SKIP_PARAM]?.toInt() ?: 0
         val author = context.req.params[AUTHOR_PARAM] ?: ""
-        val myPosts = context.data.getValue<MongoDB>().readMyPosts(
-            skip = skip,
-            author = author,
-        )
+        val myPosts =
+            context.data.getValue<MongoDB>().readMyPosts(
+                skip = skip,
+                author = author,
+            )
         context.res.setBody(ApiListResponse.Success(data = myPosts))
     } catch (e: Exception) {
         context.res.setBody(ApiListResponse.Error(message = e.message.toString()))
@@ -106,9 +107,11 @@ suspend fun readPopularPosts(context: ApiContext) {
 suspend fun deleteSelectedPosts(context: ApiContext) {
     try {
         val request = context.req.getBody<List<String>>()
-        context.res.setBody(request?.let {
-            context.data.getValue<MongoDB>().deleteSelectedPosts(ids = it)
-        })
+        context.res.setBody(
+            request?.let {
+                context.data.getValue<MongoDB>().deleteSelectedPosts(ids = it)
+            },
+        )
     } catch (e: Exception) {
         context.res.setBody(e.message)
     }
@@ -119,10 +122,11 @@ suspend fun searchPostsByTitle(context: ApiContext) {
     try {
         val query = context.req.params[QUERY_PARAM] ?: ""
         val skip = context.req.params[SKIP_PARAM]?.toInt() ?: 0
-        val posts = context.data.getValue<MongoDB>().searchPostsByTitle(
-            query = query,
-            skip = skip,
-        )
+        val posts =
+            context.data.getValue<MongoDB>().searchPostsByTitle(
+                query = query,
+                skip = skip,
+            )
         context.res.setBody(ApiListResponse.Success(data = posts))
     } catch (e: Exception) {
         context.res.setBody(ApiListResponse.Error(message = e.message.toString()))
@@ -135,10 +139,11 @@ suspend fun searchPostsByCategory(context: ApiContext) {
         val category =
             Category.valueOf(context.req.params[CATEGORY_PARAM] ?: Category.Programming.name)
         val skip = context.req.params[SKIP_PARAM]?.toInt() ?: 0
-        val posts = context.data.getValue<MongoDB>().searchPostsByCategory(
-            category = category,
-            skip = skip,
-        )
+        val posts =
+            context.data.getValue<MongoDB>().searchPostsByCategory(
+                category = category,
+                skip = skip,
+            )
         context.res.setBody(ApiListResponse.Success(data = posts))
     } catch (e: Exception) {
         context.res.setBody(ApiListResponse.Error(message = e.message.toString()))
@@ -148,7 +153,7 @@ suspend fun searchPostsByCategory(context: ApiContext) {
 @Api(routeOverride = "readselectedpost")
 suspend fun readSelectedPost(context: ApiContext) {
     val postId = context.req.params[POST_ID_PARAM]
-    if(!postId.isNullOrEmpty()) {
+    if (!postId.isNullOrEmpty()) {
         try {
             val selectedPost = context.data.getValue<MongoDB>().readSelectedPost(id = postId)
             context.res.setBody(ApiResponse.Success(data = selectedPost))

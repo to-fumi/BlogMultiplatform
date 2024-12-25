@@ -10,9 +10,11 @@ import com.varabyte.kobweb.api.data.getValue
 suspend fun subscribeNewsletter(context: ApiContext) {
     try {
         val newsletter = context.req.getBody<Newsletter>()
-        context.res.setBody(newsletter?.let {
-            context.data.getValue<MongoDB>().subscribe(newsletter = it)
-        })
+        context.res.setBody(
+            newsletter?.let {
+                context.data.getValue<MongoDB>().subscribe(newsletter = it)
+            },
+        )
     } catch (e: Exception) {
         context.res.setBody(e.message)
     }

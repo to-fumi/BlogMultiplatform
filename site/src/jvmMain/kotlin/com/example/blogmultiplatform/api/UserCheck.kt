@@ -17,16 +17,17 @@ suspend fun userCheck(context: ApiContext) {
     try {
         val userRequest =
             context.req.body?.decodeToString()?.let { Json.decodeFromString<User>(it) }
-        val user = userRequest?.let {
-            context.data.getValue<MongoDB>().checkUserExistence(
-                User(username = it.username, password = hashPassword(it.password))
-            )
-        }
+        val user =
+            userRequest?.let {
+                context.data.getValue<MongoDB>().checkUserExistence(
+                    User(username = it.username, password = hashPassword(it.password)),
+                )
+            }
         if (user != null) {
             context.res.setBodyText(
                 Json.encodeToString(
-                    UserWithoutPassword(_id = user._id, username = user.username)
-                )
+                    UserWithoutPassword(_id = user._id, username = user.username),
+                ),
             )
         } else {
             context.res.setBodyText(Json.encodeToString(Exception("User doesn't exist.")))
@@ -41,9 +42,10 @@ suspend fun checkUserId(context: ApiContext) {
     try {
         val idRequest =
             context.req.body?.decodeToString()?.let { Json.decodeFromString<String>(it) }
-        val result = idRequest?.let {
-            context.data.getValue<MongoDB>().checkUserId(it)
-        }
+        val result =
+            idRequest?.let {
+                context.data.getValue<MongoDB>().checkUserId(it)
+            }
         if (result != null) {
             context.res.setBodyText(Json.encodeToString(result))
         } else {

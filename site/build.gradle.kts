@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kobweb.application)
     alias(libs.plugins.serialization.plugin)
     // alias(libs.plugins.kobwebx.markdown)
+    alias(libs.plugins.kotlin.linter)
 }
 
 group = "com.example.blogmultiplatform"
@@ -40,7 +41,7 @@ kobweb {
                 link(rel = "preconnect", href = "https://fonts.gstatic.com") { attributes["crossorigin"] = "" }
                 link(
                     href = "https://fonts.googleapis.com/css2?family=Roboto&display=swap",
-                    rel = "stylesheet"
+                    rel = "stylesheet",
                 )
             }
         }
