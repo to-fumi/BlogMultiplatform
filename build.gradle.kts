@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.serialization.plugin) apply false
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.mongodb.realm) apply false
 }
 
 subprojects {
