@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.mongodb.realm)
     alias(libs.plugins.serialization.plugin)
 }
 
@@ -16,8 +15,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -53,7 +50,8 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.coroutine.core)
-    implementation(libs.mongo.sync)
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization)
+    implementation(libs.ditto.sync)
+    implementation(project(":site"))
 }
