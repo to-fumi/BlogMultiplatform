@@ -36,6 +36,13 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/**"
+            excludes += "/kotlin/**"
+            excludes += "DebugProbesKt.bin"
+        }
+    }
 }
 
 dependencies {
