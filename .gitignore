@@ -30,3 +30,6 @@ local.properties
 
 # Kotlin ignores
 .kotlin
+
+# Jave pid file
+.hprof
