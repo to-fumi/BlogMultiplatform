@@ -33,8 +33,13 @@ object DittoSync: DittoSyncRepository, ComponentActivity() {
         }
     }
 
-    private fun initializeDitto(): Ditto? {
-        return try {
+    init {
+        requestPermissions()
+        initializeDitto()
+    }
+
+    override fun initializeDitto() {
+        try {
             DittoLogger.minimumLogLevel = DittoLogLevel.DEBUG
 
             val androidDependencies = DefaultAndroidDittoDependencies(applicationContext)
@@ -44,24 +49,14 @@ object DittoSync: DittoSyncRepository, ComponentActivity() {
                 token = PLAYGROUND_AUTHENTICATION_TOKEN
             )
 
-            Ditto(androidDependencies, identity).apply {
-                startSync()
-            }
+            ditto = Ditto(androidDependencies, identity)
+            ditto.startSync()
+            ditto.sync.registerSubscription(
+                query = "SELECT * FROM COLLECTION post"
+            )
         } catch (e: DittoError) {
             println(e.message ?: "Unknown error")
-            null
         }
-    }
-
-    init {
-        requestPermissions()
-        initializeDitto()
-    }
-
-    override fun configureTheRealm() {
-        val postSubscription = ditto.sync.registerSubscription(
-            query = "SELECT * FROM COLLECTION post"
-        )
     }
 
     override suspend fun readAllPosts(): Flow<RequestState<List<PostSync>>> {

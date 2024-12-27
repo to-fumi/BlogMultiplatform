@@ -5,6 +5,6 @@ import com.example.androidapp.util.RequestState
 import kotlinx.coroutines.flow.Flow
 
 interface DittoSyncRepository {
-    fun configureTheRealm()
+    fun initializeDitto()
     suspend fun readAllPosts(): Flow<RequestState<List<PostSync>>>
 }
