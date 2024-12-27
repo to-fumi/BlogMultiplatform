@@ -14,7 +14,6 @@ compose-bom = "2024.12.01"
 navigation = "2.8.5"
 coil = "2.3.0"
 ditto = "4.8.1"
-room-ktx = "2.6.1"
 
 [libraries]
 compose-html-core = { module = "org.jetbrains.compose.html:html-core", version.ref = "jetbrains-compose" }
@@ -42,7 +41,6 @@ material3 = { module = "androidx.compose.material3:material3" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 ditto-sync = { module = "live.ditto:ditto", version.ref = "ditto"}
-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-ktx" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -54,5 +54,4 @@ dependencies {
     implementation(libs.kotlinx.serialization)
     implementation(libs.ditto.sync)
     implementation(project(":site"))
-    implementation(libs.room.ktx)
 }
