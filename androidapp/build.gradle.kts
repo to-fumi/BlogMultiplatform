@@ -39,14 +39,11 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/**"
-            excludes += "/kotlin/**"
-            excludes += "DebugProbesKt.bin"
         }
     }
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -60,5 +57,4 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization)
     implementation(libs.ditto.sync)
-    implementation(project(":site"))
 }

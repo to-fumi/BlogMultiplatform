@@ -1,8 +1,7 @@
 package com.example.androidapp.models
 
-import com.example.blogmultiplatform.models.Category
 
-data class PostSync (
+data class Post (
     val _id: String = "",
     val author: String = "",
     val date: Long = 0L,
