@@ -1,12 +1,13 @@
 package com.example.androidapp.data
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.androidapp.models.PostSync
+import com.example.androidapp.models.Category
+import com.example.androidapp.models.Post
 import com.example.androidapp.util.Constants.APP_ID
 import com.example.androidapp.util.Constants.PLAYGROUND_AUTHENTICATION_TOKEN
 import com.example.androidapp.util.RequestState
-import com.example.blogmultiplatform.models.Category
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import live.ditto.Ditto
@@ -55,18 +56,18 @@ object DittoSync: DittoSyncRepository, ComponentActivity() {
                 query = "SELECT * FROM COLLECTION post"
             )
         } catch (e: DittoError) {
-            println(e.message ?: "Unknown error")
+            Log.e("Ditto error", e.message!!)
         }
     }
 
-    override suspend fun readAllPosts(): Flow<RequestState<List<PostSync>>> {
+    override suspend fun readAllPosts(): Flow<RequestState<List<Post>>> {
         return try {
             flow {
                 emit(
                     RequestState.Success(
                         ditto.store.execute(query = "SELECT * FROM post").items.map {
                             result ->
-                            PostSync(
+                            Post(
                                 _id = result.value["_id"] as String,
                                 author = result.value["author"] as String,
                                 date = result.value["date"] as Long,

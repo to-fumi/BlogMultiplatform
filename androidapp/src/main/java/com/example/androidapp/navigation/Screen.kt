@@ -1,6 +1,7 @@
 package com.example.androidapp.navigation
 
-import com.example.blogmultiplatform.models.Category as PostCategory
+import com.example.androidapp.models.Category as PostCategory
+
 
 sealed class Screen(val route: String) {
     object Home: Screen(route = "home_screen")
