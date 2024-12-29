@@ -3,10 +3,9 @@ package com.example.androidapp.data
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.androidapp.BuildConfig
 import com.example.androidapp.models.Category
 import com.example.androidapp.models.Post
-import com.example.androidapp.util.Constants.APP_ID
-import com.example.androidapp.util.Constants.PLAYGROUND_AUTHENTICATION_TOKEN
 import com.example.androidapp.util.RequestState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -46,8 +45,8 @@ object DittoSync: DittoSyncRepository, ComponentActivity() {
             val androidDependencies = DefaultAndroidDittoDependencies(applicationContext)
             val identity = DittoIdentity.OnlinePlayground(
                 androidDependencies,
-                appId = APP_ID,
-                token = PLAYGROUND_AUTHENTICATION_TOKEN
+                appId = BuildConfig.DITTO_APP_ID,
+                token = BuildConfig.DITTO_PLAYGROUND_TOKEN,
             )
 
             ditto = Ditto(androidDependencies, identity)

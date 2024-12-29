@@ -1,9 +1,22 @@
+import java.util.Properties
+
+val envFile = rootProject.file("env.properties")
+val env = Properties()
+if (envFile.exists()) {
+    env.load(envFile.inputStream())
+} else {
+    throw GradleException("Missing env.properties file. Please add it to the root directory.")
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.serialization.plugin)
+    alias(libs.plugins.androidx.hilt)
+    alias(libs.plugins.kotlin.kapt)
 }
+
 
 android {
     namespace = "com.example.androidapp"
@@ -15,6 +28,8 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        buildConfigField("String", "DITTO_APP_ID", "${env["DITTO_APP_ID"]}")
+        buildConfigField("String", "DITTO_PLAYGROUND_TOKEN", "${env["DITTO_PLAYGROUND_TOKEN"]}")
     }
 
     buildTypes {
@@ -35,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -57,4 +73,12 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization)
     implementation(libs.ditto.sync)
+    implementation(libs.androidx.hilt)
+    implementation(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.appcompat)
+}
+
+kapt {
+    correctErrorTypes = true
 }
