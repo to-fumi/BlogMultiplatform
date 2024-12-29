@@ -1,8 +1,8 @@
 package com.example.androidapp.data
 
+import android.content.Context
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.androidapp.BuildConfig
 import com.example.androidapp.models.Category
 import com.example.androidapp.models.Post
@@ -10,35 +10,22 @@ import com.example.androidapp.util.RequestState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import live.ditto.Ditto
-import live.ditto.DittoError
 import live.ditto.DittoIdentity
 import live.ditto.DittoLogLevel
 import live.ditto.DittoLogger
 import live.ditto.android.DefaultAndroidDittoDependencies
-import live.ditto.transports.DittoSyncPermissions
 
 object DittoSync: DittoSyncRepository, ComponentActivity() {
 
     private lateinit var ditto: Ditto
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            this.ditto.refreshPermissions()
-        }
+    override fun initializeDitto(
+        applicationContext: Context,
+        onInitialized: () -> Unit,
+        onError: (error: Throwable) -> Unit,
+    ) {
+        if (::ditto.isInitialized) return onInitialized()
 
-    private fun requestPermissions() {
-        val missing = DittoSyncPermissions(this).missingPermissions()
-        if (missing.isNotEmpty()) {
-            requestPermissionLauncher.launch(missing)
-        }
-    }
-
-    init {
-        requestPermissions()
-        initializeDitto()
-    }
-
-    override fun initializeDitto() {
         try {
             DittoLogger.minimumLogLevel = DittoLogLevel.DEBUG
 
@@ -47,16 +34,18 @@ object DittoSync: DittoSyncRepository, ComponentActivity() {
                 androidDependencies,
                 appId = BuildConfig.DITTO_APP_ID,
                 token = BuildConfig.DITTO_PLAYGROUND_TOKEN,
+                enableDittoCloudSync = false,
             )
 
-            ditto = Ditto(androidDependencies, identity)
-            ditto.startSync()
-            ditto.sync.registerSubscription(
-                query = "SELECT * FROM COLLECTION post"
-            )
-        } catch (e: DittoError) {
+            ditto = Ditto(androidDependencies, identity).apply {
+                disableSyncWithV3()
+                startSync()
+            }
+        } catch (e: Throwable) {
             Log.e("Ditto error", e.message!!)
         }
+
+        onInitialized()
     }
 
     override suspend fun readAllPosts(): Flow<RequestState<List<Post>>> {

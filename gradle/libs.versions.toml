@@ -17,6 +17,7 @@ ditto = "4.8.1"
 hilt = "2.51"
 hilt-navigation-compose = "1.2.0"
 appcompat = "1.7.0"
+splashscreen = "1.0.1"
 
 [libraries]
 compose-html-core = { module = "org.jetbrains.compose.html:html-core", version.ref = "jetbrains-compose" }
@@ -47,7 +48,8 @@ ditto-sync = { module = "live.ditto:ditto", version.ref = "ditto"}
 androidx-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt"}
 androidx-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
