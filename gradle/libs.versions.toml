@@ -14,6 +14,9 @@ compose-bom = "2024.12.01"
 navigation = "2.8.5"
 coil = "2.3.0"
 ditto = "4.8.1"
+hilt = "2.51"
+hilt-navigation-compose = "1.2.0"
+appcompat = "1.7.0"
 
 [libraries]
 compose-html-core = { module = "org.jetbrains.compose.html:html-core", version.ref = "jetbrains-compose" }
@@ -41,6 +44,10 @@ material3 = { module = "androidx.compose.material3:material3" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 ditto-sync = { module = "live.ditto:ditto", version.ref = "ditto"}
+androidx-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt"}
+androidx-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -53,3 +60,5 @@ serialization-plugin = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kotlin-linter = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+androidx-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }

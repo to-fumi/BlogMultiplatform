@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.serialization.plugin) apply false
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.androidx.hilt) apply false
+    alias(libs.plugins.kotlin.kapt) apply false
 }
 
 allprojects {

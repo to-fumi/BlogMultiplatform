@@ -24,6 +24,7 @@ kotlin-js-store
 /.idea/libraries-with-intellij-classes.xml
 
 local.properties
+env.properties
 
 # Gradle ignores
 .gradle
