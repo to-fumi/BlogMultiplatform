@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
             applicationContext = applicationContext,
             onInitialized = { isDittoInitialized = true },
             onError = { error ->
-                // Maybe we want to communicate this error instead of crashing
                 throw error
             }
         )
