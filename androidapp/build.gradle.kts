@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.serialization)
     implementation(libs.ditto.sync)
+    implementation(libs.ditto.tools.viewer)
     implementation(libs.androidx.hilt)
     implementation(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
