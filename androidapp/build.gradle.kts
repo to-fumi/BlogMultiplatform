@@ -30,6 +30,8 @@ android {
         versionName = "1.0"
         buildConfigField("String", "DITTO_APP_ID", "${env["DITTO_APP_ID"]}")
         buildConfigField("String", "DITTO_PLAYGROUND_TOKEN", "${env["DITTO_PLAYGROUND_TOKEN"]}")
+        buildConfigField("String", "ATLAS_MONGO_CLUSTER", "${env["ATLAS_MONGO_CLUSTER"]}")
+        buildConfigField("String", "ATLAS_DATABASE_NAME", "${env["ATLAS_DATABASE_NAME"]}")
     }
 
     buildTypes {
@@ -79,6 +81,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.splashscreen)
+    implementation(libs.mongodb.kotlin.driver)
+    implementation(libs.kotlinx.coroutine.core)
 }
 
 kapt {
