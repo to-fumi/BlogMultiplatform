@@ -85,7 +85,7 @@ fun PostCard(
                 )
                 SuggestionChip(
                     onClick = {},
-                    label = { Text(text = Category.valueOf(post.category.name).name) }
+                    label = { Text(text = Category.valueOf(post.category).name) }
                 )
             }
         }
