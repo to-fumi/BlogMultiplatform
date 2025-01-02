@@ -13,8 +13,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.compose.rememberNavController
 import com.example.androidapp.DittoHandler.Companion.initializeDitto
+import com.example.androidapp.data.DittoSync
 import com.example.androidapp.navigation.SetupNavGraph
 import com.example.androidapp.ui.theme.BlogmultiplatformTheme
+import kotlinx.coroutines.runBlocking
 import live.ditto.transports.DittoSyncPermissions
 
 class MainActivity : ComponentActivity() {
@@ -34,6 +36,8 @@ class MainActivity : ComponentActivity() {
                 throw error
             }
         )
+
+        runBlocking { DittoSync.setupDittoCollection(applicationContext = applicationContext) }
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
