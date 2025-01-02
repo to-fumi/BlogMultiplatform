@@ -1,15 +1,16 @@
 package com.example.blogmultiplatform.models
 
+import com.example.blogmultiplatform.CategoryCommon
 import kotlinx.serialization.Serializable
 
 @Serializable
-actual enum class Category {
+enum class Category: CategoryCommon {
     Technology,
     Programming,
     Design,
     ;
 
-    actual val color: String
+    override val color: String
         get() =
             when (this) {
                 Technology -> Theme.Green.hex
