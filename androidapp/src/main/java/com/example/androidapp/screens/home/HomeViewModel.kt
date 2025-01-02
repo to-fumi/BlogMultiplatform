@@ -17,7 +17,7 @@ class HomeViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-//            fetchAllPosts()
+            fetchAllPosts()
         }
     }
 

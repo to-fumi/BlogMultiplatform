@@ -13,6 +13,7 @@ import org.json.JSONArray
 object DittoSync: DittoSyncRepository, ComponentActivity() {
 
     override suspend fun setupDittoCollection(applicationContext: Context) {
+        if (!isPostCollectionEmpty()) return
         try {
             val jsonString = applicationContext.assets.open("MyBlog.post.json").bufferedReader().use {
                 it.readText()
@@ -31,41 +32,29 @@ object DittoSync: DittoSyncRepository, ComponentActivity() {
                     mapOf("document" to document)
                 )
             }
-
-            Log.i("Ditto Json", "All documents inserted successfully into the 'post' collection")
-
-            val posts = ditto.store.collection("post").findAll().exec()
-            posts.forEach { post ->
-                Log.i("Ditto Json", post.value.keys.toString())
-            }
+            Log.i("Ditto Operation", "All documents inserted successfully into the 'post' collection")
         } catch (e: Exception) {
             Log.e("Ditto Error", "Failed to setup Ditto collection", e)
         }
-
     }
 
     override suspend fun readAllPosts(): Flow<RequestState<List<Post>>> {
-        return try {
-            flow {
-                emit(
-                    RequestState.Success(
-                        ditto.store.execute(query = "SELECT * FROM post").items.map {
-                            result ->
-                            Post(
-                                _id = result.value["_id"] as String,
-                                author = result.value["author"] as String,
-                                date = result.value["date"] as Long,
-                                title = result.value["title"] as String,
-                                subtitle = result.value["subtitle"] as String,
-                                thumbnail = result.value["thumbnail"] as String,
-                                category = result.value["category"] as String,
-                            )
-                        }
-                    )
-                )
+        return flow {
+            emit(RequestState.Loading)
+
+            try {
+                val postDocument = ditto.store.collection("post").findAll().exec()
+                val posts = postDocument.map { post ->
+                    Post(post.value.toMap())
+                }
+                emit(RequestState.Success(posts))
+            } catch (e: Exception) {
+                emit(RequestState.Error(Exception(e.message)))
             }
-        } catch (e: Exception) {
-            flow { emit(RequestState.Error(Exception(e.message))) }
         }
+    }
+
+    private fun isPostCollectionEmpty(): Boolean {
+        return ditto.store.collection("post").findAll().exec().isEmpty()
     }
 }
