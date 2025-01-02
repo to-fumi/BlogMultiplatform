@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.splashscreen)
+    implementation(project(":shared"))
 }
 
 kapt {
