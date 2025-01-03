@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.example.blogmultiplatform.models.Category
 import com.example.blogmultiplatform.models.PostWithoutDetails
 import com.example.blogmultiplatform.models.Theme
 import com.example.blogmultiplatform.styles.PostPreviewStyle
@@ -221,7 +222,7 @@ fun PostContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CategoryChip(
-                category = post.category,
+                category = Category.valueOf(post.category),
                 darkTheme = darkTheme,
             )
             if (selectableMode) {
