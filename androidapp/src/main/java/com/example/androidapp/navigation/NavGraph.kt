@@ -34,6 +34,7 @@ fun SetupNavGraph(
                 active = active,
                 onActiveChange = { active = it },
                 onQueryChange = { query = it },
+                onCategorySelect = {},
                 onSearchBarChange = { opened ->
                     searchBarOpened = opened
                     if (!opened) {

@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.androidapp.data.DittoSync
 import com.example.androidapp.models.Post
 import com.example.androidapp.util.RequestState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeViewModel : ViewModel() {
     private val _allPosts: MutableState<RequestState<List<Post>>> = mutableStateOf(RequestState.Idle)
@@ -19,21 +21,23 @@ class HomeViewModel : ViewModel() {
     val searchPosts: State<RequestState<List<Post>>> = _searchPosts
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             fetchAllPosts()
         }
     }
 
-    private fun fetchAllPosts() {
-        _allPosts.value = RequestState.Loading
-        viewModelScope.launch {
-            DittoSync.readAllPosts().collectLatest { _allPosts.value = it }
+    private suspend fun fetchAllPosts() {
+        withContext(Dispatchers.Main) {
+            _allPosts.value = RequestState.Loading
         }
+        DittoSync.readAllPosts().collectLatest { _allPosts.value = it }
     }
 
     fun searchPostsByTitle(query: String) {
-        _searchPosts.value = RequestState.Loading
         viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                _searchPosts.value = RequestState.Loading
+            }
             DittoSync.searchPostsByTitle(query).collectLatest { _searchPosts.value = it }
         }
     }
