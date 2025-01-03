@@ -17,6 +17,7 @@ import com.example.androidapp.screens.category.CategoryViewModel
 import com.example.androidapp.screens.details.DetailsScreen
 import com.example.androidapp.screens.home.HomeScreen
 import com.example.androidapp.screens.home.HomeViewModel
+import com.example.blogmultiplatform.Constants.SHOW_SECTIONS_PARAM
 
 @Composable
 fun SetupNavGraph(
@@ -83,7 +84,7 @@ fun SetupNavGraph(
         ) {
             val postId = it.arguments?.getString("postId")
             DetailsScreen(
-                url = "http://10.0.2.2:8080/posts/post?postId=$postId",
+                url = "http://10.0.2.2:8080/posts/post?postId=$postId?$SHOW_SECTIONS_PARAM=false",
                 onBackPress = { navController.popBackStack() },
             )
         }

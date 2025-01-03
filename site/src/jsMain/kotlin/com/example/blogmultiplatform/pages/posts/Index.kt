@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.example.blogmultiplatform.Constants.SHOW_SECTIONS_PARAM
 import com.example.blogmultiplatform.components.CategoryNavigationItems
 import com.example.blogmultiplatform.components.ErrorView
 import com.example.blogmultiplatform.components.LoadingIndicator
@@ -23,6 +24,7 @@ import com.example.blogmultiplatform.util.Res
 import com.example.blogmultiplatform.util.fetchSelectedPost
 import com.example.blogmultiplatform.util.parseDateString
 import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextOverflow
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -39,6 +41,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.id
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.textOverflow
 import com.varabyte.kobweb.compose.ui.styleModifier
@@ -47,6 +50,7 @@ import com.varabyte.kobweb.core.Page
 import com.varabyte.kobweb.core.rememberPageContext
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
@@ -62,12 +66,17 @@ fun PostPage() {
     val context = rememberPageContext()
     val breakpoint = rememberBreakpoint()
     var overflowOpened by remember { mutableStateOf(false) }
+    var showSections by remember { mutableStateOf(true) }
     var apiResponse by remember { mutableStateOf<ApiResponse>(ApiResponse.Idle) }
     val hasPostIdParam = remember(key1 = context.route) {
         context.route.params.containsKey(POST_ID_PARAM)
     }
 
     LaunchedEffect(key1 = context.route) {
+        showSections = if (context.route.params.containsKey(SHOW_SECTIONS_PARAM)) {
+            context.route.params.getValue(SHOW_SECTIONS_PARAM).split("=")
+                .last().toBoolean()
+        } else true
         if (hasPostIdParam) {
             val postId = context.route.params.getValue(POST_ID_PARAM)
             apiResponse = fetchSelectedPost(id = postId)
@@ -89,14 +98,19 @@ fun PostPage() {
                 }
             )
         }
-        HeaderSection(
-            breakpoint = breakpoint,
-            logo = Res.Image.logo,
-            onMenuOpen = { overflowOpened = true },
-        )
+        if (showSections) {
+            HeaderSection(
+                breakpoint = breakpoint,
+                logo = Res.Image.logo,
+                onMenuOpen = { overflowOpened = true },
+            )
+        }
         when(apiResponse) {
             is ApiResponse.Success -> {
-                PostContent(post = (apiResponse as ApiResponse.Success).data)
+                PostContent(
+                    post = (apiResponse as ApiResponse.Success).data,
+                    breakpoint = breakpoint,
+                )
                 scope.launch {
                     delay(50)
                     try {
@@ -113,13 +127,16 @@ fun PostPage() {
                 ErrorView(message = (apiResponse as ApiResponse.Error).message)
             }
         }
-        FooterSection()
+        if (showSections) {
+            FooterSection()
+        }
     }
 }
 
 @Composable
 fun PostContent(
     post: Post,
+    breakpoint: Breakpoint,
 ) {
     LaunchedEffect(post) {
         (document.getElementById(Id.postContent) as HTMLDivElement).innerHTML = post.content
@@ -148,6 +165,7 @@ fun PostContent(
                 .fontFamily(FONT_FAMILY)
                 .fontSize(40.px)
                 .fontWeight(FontWeight.Bold)
+                .overflow(Overflow.Hidden)
                 .textOverflow(TextOverflow.Ellipsis)
                 .styleModifier {
                     property("display", "-webkit-box")
@@ -161,7 +179,11 @@ fun PostContent(
             modifier = Modifier
                 .margin(bottom = 40.px)
                 .fillMaxWidth()
-                .height(600.px),
+                .height(
+                    if (breakpoint <= Breakpoint.SM) 250.px
+                    else if (breakpoint <= Breakpoint.MD) 400.px
+                    else 600.px
+                ),
             src = post.thumbnail
         )
         Div(
