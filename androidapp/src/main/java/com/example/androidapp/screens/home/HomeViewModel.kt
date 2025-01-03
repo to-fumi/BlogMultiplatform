@@ -25,12 +25,14 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun fetchAllPosts() {
+        _allPosts.value = RequestState.Loading
         viewModelScope.launch {
             DittoSync.readAllPosts().collectLatest { _allPosts.value = it }
         }
     }
 
     fun searchPostsByTitle(query: String) {
+        _searchPosts.value = RequestState.Loading
         viewModelScope.launch {
             DittoSync.searchPostsByTitle(query).collectLatest { _searchPosts.value = it }
         }
