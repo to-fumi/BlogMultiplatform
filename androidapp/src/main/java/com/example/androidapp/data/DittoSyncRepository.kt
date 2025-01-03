@@ -8,4 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface DittoSyncRepository {
     suspend fun setupDittoCollection(applicationContext: Context)
     suspend fun readAllPosts(): Flow<RequestState<List<Post>>>
+    suspend fun searchPostsByTitle(query: String): Flow<RequestState<List<Post>>>
 }
