@@ -54,6 +54,27 @@ object DittoSync: DittoSyncRepository, ComponentActivity() {
         }
     }
 
+    override suspend fun searchPostsByTitle(query: String): Flow<RequestState<List<Post>>> {
+        return flow {
+            emit(RequestState.Loading)
+            try {
+                val allPosts = ditto.store.collection("post").findAll().exec()
+
+                val filteredPosts = allPosts.filter { document ->
+                    val title = document.value["title"] as String
+                    title.contains(query, ignoreCase = true)
+                }
+
+                val posts = filteredPosts.map { post ->
+                    Post(post.value.toMap())
+                }
+                emit(RequestState.Success(posts))
+            } catch (e: Exception) {
+                emit(RequestState.Error(Exception(e.message)))
+            }
+        }
+    }
+
     private fun isPostCollectionEmpty(): Boolean {
         return ditto.store.collection("post").findAll().exec().isEmpty()
     }

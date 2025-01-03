@@ -15,6 +15,9 @@ class HomeViewModel : ViewModel() {
     private val _allPosts: MutableState<RequestState<List<Post>>> = mutableStateOf(RequestState.Idle)
     val allPosts: State<RequestState<List<Post>>> = _allPosts
 
+    private val _searchPosts: MutableState<RequestState<List<Post>>> = mutableStateOf(RequestState.Idle)
+    val searchPosts: State<RequestState<List<Post>>> = _searchPosts
+
     init {
         viewModelScope.launch {
             fetchAllPosts()
@@ -25,5 +28,15 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             DittoSync.readAllPosts().collectLatest { _allPosts.value = it }
         }
+    }
+
+    fun searchPostsByTitle(query: String) {
+        viewModelScope.launch {
+            DittoSync.searchPostsByTitle(query).collectLatest { _searchPosts.value = it }
+        }
+    }
+
+    fun resetSearchedPosts() {
+        _searchPosts.value = RequestState.Idle
     }
 }

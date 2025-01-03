@@ -1,6 +1,10 @@
 package com.example.androidapp.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -18,7 +22,28 @@ fun SetupNavGraph(
     ) {
         composable(route = Screen.Home.route) {
             val viewModel: HomeViewModel = viewModel()
-            HomeScreen(posts = viewModel.allPosts.value)
+            var query by remember { mutableStateOf("") }
+            var searchBarOpened by remember { mutableStateOf(false) }
+            var active by remember { mutableStateOf(false) }
+
+            HomeScreen(
+                posts = viewModel.allPosts.value,
+                searchedPosts = viewModel.searchPosts.value,
+                query = query,
+                searchBarOpened = searchBarOpened,
+                active = active,
+                onActiveChange = { active = it },
+                onQueryChange = { query = it },
+                onSearchBarChange = { opened ->
+                    searchBarOpened = opened
+                    if (!opened) {
+                        query = ""
+                        active = false
+                        viewModel.resetSearchedPosts()
+                    }
+                },
+                onSearch = viewModel::searchPostsByTitle,
+            )
         }
         composable(route = Screen.Category.route) {
 
