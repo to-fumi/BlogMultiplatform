@@ -1,8 +1,6 @@
 package com.example.androidapp.models
 
-import com.example.blogmultiplatform.CategoryCommon
-
-enum class Category(override val color: String): CategoryCommon {
+enum class Category(val color: String) {
     Programming(color = ""),
     Technology(color = ""),
     Design(color = ""),
