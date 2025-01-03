@@ -14,10 +14,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeViewModel : ViewModel() {
-    private val _allPosts: MutableState<RequestState<List<Post>>> = mutableStateOf(RequestState.Idle)
+    private val _allPosts: MutableState<RequestState<List<Post>>> =
+        mutableStateOf(RequestState.Idle)
     val allPosts: State<RequestState<List<Post>>> = _allPosts
 
-    private val _searchPosts: MutableState<RequestState<List<Post>>> = mutableStateOf(RequestState.Idle)
+    private val _searchPosts: MutableState<RequestState<List<Post>>> =
+        mutableStateOf(RequestState.Idle)
     val searchPosts: State<RequestState<List<Post>>> = _searchPosts
 
     init {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.activity.ComponentActivity
 import com.example.androidapp.DittoHandler.Companion.ditto
+import com.example.androidapp.models.Category
 import com.example.androidapp.models.Post
 import com.example.androidapp.util.RequestState
 import kotlinx.coroutines.flow.Flow
@@ -74,6 +75,26 @@ object DittoSync: DittoSyncRepository, ComponentActivity() {
             }
         }
     }
+
+    override suspend fun searchPostsByCategory(category: Category): Flow<RequestState<List<Post>>> {
+        return flow {
+            emit(RequestState.Loading)
+            try {
+                val allPosts = ditto.store.collection("post").findAll().exec()
+
+                val filteredPosts = allPosts.filter { document ->
+                    val categoryDocument = document.value["category"] as String
+                    categoryDocument == category.name
+                }
+
+                val posts = filteredPosts.map { post ->
+                    Post(post.value.toMap())
+                }
+                emit(RequestState.Success(posts))
+            } catch (e: Exception) {
+                emit(RequestState.Error(Exception(e.message)))
+            }
+        }    }
 
     private fun isPostCollectionEmpty(): Boolean {
         return ditto.store.collection("post").findAll().exec().isEmpty()
