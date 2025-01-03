@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import com.example.androidapp.models.Category
 import com.example.androidapp.screens.category.CategoryScreen
 import com.example.androidapp.screens.category.CategoryViewModel
+import com.example.androidapp.screens.details.DetailsScreen
 import com.example.androidapp.screens.home.HomeScreen
 import com.example.androidapp.screens.home.HomeViewModel
 
@@ -51,7 +52,9 @@ fun SetupNavGraph(
                     }
                 },
                 onSearch = viewModel::searchPostsByTitle,
-                onPostClick = {},
+                onPostClick = { postId ->
+                    navController.navigate(Screen.Details.passPostId(postId))
+                }
             )
         }
         composable(
@@ -67,11 +70,22 @@ fun SetupNavGraph(
                 posts = viewModel.categoryPosts.value,
                 category = Category.valueOf(selectedCategory),
                 onBackPress = { navController.popBackStack() },
-                onPostClick = {}
+                onPostClick = { postId ->
+                    navController.navigate(Screen.Details.passPostId(postId))
+                }
             )
         }
-        composable(route = Screen.Details.route) {
-
+        composable(
+            route = Screen.Details.route,
+            arguments = listOf(navArgument(name = "postId") {
+                type = NavType.StringType
+            })
+        ) {
+            val postId = it.arguments?.getString("postId")
+            DetailsScreen(
+                url = "http://10.0.2.2:8080/posts/post?postId=$postId",
+                onBackPress = { navController.popBackStack() },
+            )
         }
     }
 }
