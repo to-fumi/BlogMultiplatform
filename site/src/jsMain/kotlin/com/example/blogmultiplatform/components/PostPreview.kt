@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import com.example.blogmultiplatform.models.Category
 import com.example.blogmultiplatform.models.PostWithoutDetails
 import com.example.blogmultiplatform.models.Theme
+import com.example.blogmultiplatform.styles.MainPostPreviewStyle
 import com.example.blogmultiplatform.styles.PostPreviewStyle
 import com.example.blogmultiplatform.util.Constants.FONT_FAMILY
 import com.example.blogmultiplatform.util.parseDateString
@@ -76,7 +77,15 @@ fun PostPreview(
 
     if (vertical) {
         Column(
-            modifier = PostPreviewStyle.toModifier()
+            modifier = Modifier
+                .thenIf(
+                    condition = post.main,
+                    other = MainPostPreviewStyle.toModifier()
+                )
+                .thenIf(
+                    condition = !post.main,
+                    other = PostPreviewStyle.toModifier()
+                )
                 .then(modifier)
                 .fillMaxWidth(
                     if (darkTheme) 100.percent
@@ -127,8 +136,17 @@ fun PostPreview(
         }
     } else {
         Row(
-            modifier = PostPreviewStyle.toModifier()
+            modifier = Modifier
+                .thenIf(
+                    condition = post.main,
+                    other = MainPostPreviewStyle.toModifier()
+                )
+                .thenIf(
+                    condition = !post.main,
+                    other = PostPreviewStyle.toModifier()
+                )
                 .then(modifier)
+                .height(thumbnailHeight)
                 .onClick { onClick(post.id) }
                 .cursor(Cursor.Pointer)
         ) {
@@ -174,6 +192,7 @@ fun PostContent(
                 condition = !vertical,
                 other = Modifier.margin(left = 20.px)
             )
+            .padding(all = 12.px)
             .fillMaxWidth()
     ) {
         SpanText(

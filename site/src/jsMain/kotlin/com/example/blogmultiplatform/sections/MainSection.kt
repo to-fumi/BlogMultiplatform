@@ -15,6 +15,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -80,6 +81,7 @@ fun MainPosts(
             ) {
                 posts.drop(1).forEach { postWithoutDetails ->
                     PostPreview(
+                        modifier = Modifier.margin(bottom = 20.px),
                         post = postWithoutDetails,
                         darkTheme = true,
                         vertical = false,
