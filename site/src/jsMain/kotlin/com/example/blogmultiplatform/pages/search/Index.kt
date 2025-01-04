@@ -25,14 +25,18 @@ import com.example.blogmultiplatform.util.Id
 import com.example.blogmultiplatform.util.Res
 import com.example.blogmultiplatform.util.searchPostsByCategory
 import com.example.blogmultiplatform.util.searchPostsByTitle
+import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
+import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
+import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.textAlign
 import com.varabyte.kobweb.core.Page
@@ -42,6 +46,7 @@ import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.vh
 import org.w3c.dom.HTMLInputElement
 
 @Page(routeOverride = "query")
@@ -152,58 +157,73 @@ fun SearchPage() {
                     text = value.ifEmpty { Category.Programming.name },
                 )
             }
-            PostsSection(
-                breakpoint = breakpoint,
-                posts = searchedPosts,
-                showMoreVisibility = showMorePosts,
-                onShowMore = {
-                    scope.launch {
-                        if (hasCategoryParam) {
-                            searchPostsByCategory(
-                                category = runCatching {
-                                    Category.valueOf(value)
-                                }.getOrElse { Category.Programming },
-                                skip = postsToSkip,
-                                onSuccess = { response ->
-                                    if (response is ApiListResponse.Success) {
-                                        if (response.data.isNotEmpty()) {
-                                            if (response.data.size < POSTS_PER_PAGE) {
+            if (searchedPosts.isNotEmpty()) {
+                PostsSection(
+                    breakpoint = breakpoint,
+                    posts = searchedPosts,
+                    showMoreVisibility = showMorePosts,
+                    onShowMore = {
+                        scope.launch {
+                            if (hasCategoryParam) {
+                                searchPostsByCategory(
+                                    category = runCatching {
+                                        Category.valueOf(value)
+                                    }.getOrElse { Category.Programming },
+                                    skip = postsToSkip,
+                                    onSuccess = { response ->
+                                        if (response is ApiListResponse.Success) {
+                                            if (response.data.isNotEmpty()) {
+                                                if (response.data.size < POSTS_PER_PAGE) {
+                                                    showMorePosts = false
+                                                }
+                                                searchedPosts.addAll(response.data)
+                                                postsToSkip += POSTS_PER_PAGE
+                                            } else {
                                                 showMorePosts = false
                                             }
-                                            searchedPosts.addAll(response.data)
-                                            postsToSkip += POSTS_PER_PAGE
-                                        } else {
-                                            showMorePosts = false
                                         }
-                                    }
-                                },
-                                onError = {},
-                            )
-                        } else if (hasQueryParam) {
-                            (document.getElementById(Id.adminSearchBar) as HTMLInputElement).value = value
-                            searchPostsByTitle(
-                                query = value,
-                                skip = postsToSkip,
-                                onSuccess = { response ->
-                                    if (response is ApiListResponse.Success) {
-                                        if (response.data.isNotEmpty()) {
-                                            if (response.data.size < POSTS_PER_PAGE) {
+                                    },
+                                    onError = {},
+                                )
+                            } else if (hasQueryParam) {
+                                (document.getElementById(Id.adminSearchBar) as HTMLInputElement).value = value
+                                searchPostsByTitle(
+                                    query = value,
+                                    skip = postsToSkip,
+                                    onSuccess = { response ->
+                                        if (response is ApiListResponse.Success) {
+                                            if (response.data.isNotEmpty()) {
+                                                if (response.data.size < POSTS_PER_PAGE) {
+                                                    showMorePosts = false
+                                                }
+                                                searchedPosts.addAll(response.data)
+                                                postsToSkip += POSTS_PER_PAGE
+                                            } else {
                                                 showMorePosts = false
                                             }
-                                            searchedPosts.addAll(response.data)
-                                            postsToSkip += POSTS_PER_PAGE
-                                        } else {
-                                            showMorePosts = false
                                         }
-                                    }
-                                },
-                                onError = {},
-                            )
+                                    },
+                                    onError = {},
+                                )
+                            }
                         }
-                    }
-                },
-                onClick = { },
-            )
+                    },
+                    onClick = { },
+                )
+            } else {
+                Box(
+                    modifier = Modifier.height(100.vh),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    SpanText(
+                        modifier = Modifier
+                            .fontFamily(FONT_FAMILY)
+                            .fontSize(16.px)
+                            .fontWeight(FontWeight.Medium),
+                        text = "Post not found."
+                    )
+                }
+            }
         } else {
             LoadingIndicator()
         }
